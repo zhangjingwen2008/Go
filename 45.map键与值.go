@@ -17,8 +17,8 @@ func main() {
 
 	//3.使用for遍历
 	for key, value := range map1 {
-		fmt.Println(key)
-		fmt.Println(value)
+		fmt.Println("key=", key)
+		fmt.Println("value=", value)
 	}
 
 	//4.删除键值
