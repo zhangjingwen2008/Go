@@ -68,7 +68,7 @@ type BloggerInterface interface {
 func (b *Blogger) Notify(wbid int) {
 	//1.遍历获取每个粉丝数据
 	for _, value := range b.Fans {
-		value.Update(wbid)
+		value.Update(b, wbid)
 	}
 	//2.发送通知
 }
@@ -81,9 +81,9 @@ type Fans struct {
 //粉丝操作的接口
 type FansInterface interface {
 	//接收博主发出的通知
-	Update(wbid int)
+	Update(bloggerI BloggerInterface, wbid int)
 	//具体操作的方法，例如：发布评论
-	Action(wbid int)
+	Action(bloggerI BloggerInterface, wbid int)
 }
 
 //获取博主新发布的微博
@@ -102,11 +102,49 @@ type FriendFans struct {
 	Fans
 }
 
-func (f *FriendFans) Update(wbid int) {
+func (f *FriendFans) Update(bloggerI BloggerInterface, wbid int) {
 	fmt.Printf("你好%s,你所关注的博主发布了新的微博\n", f.Name)
-	f.Action(wbid)
+	f.Action(bloggerI, wbid)
 }
-func (f *FriendFans) Action(wbid int) {
+func (f *FriendFans) Action(bloggerI BloggerInterface, wbid int) {
+	//1.获取博主发布的微博
+	blogger, ok := bloggerI.(*Blogger)
+	if ok {
+		weibo := blogger.GetWeiBo(wbid)
+		//2.进行评论
+		//2.1 构建评论内容
+		cType := weibo.Type
+		message := ""
+		switch cType {
+		case 1:
+			message = "非常好呀"
+		case 2:
+			message = "加油！"
+		}
+		postComment := PostContent{0, message, time.Now(), cType, f.Name, blogger.Name}
+		//2.2 发布评论
+		blogger.AddComment(postComment, wbid)
+		blogger.ShowComment(wbid)
+	}
+}
+
+//发布评论
+func (b *Blogger) AddComment(comment PostContent, wbid int) {
+	b.Comments[wbid] = append(b.Comments[wbid], &comment)
+}
+
+//展示评论
+func (b *Blogger) ShowComment(wbid int) {
+	//1.根据微博id，获得微博数据
+	blog := b.GetWeiBo(wbid)
+	fmt.Println("博主名称：", blog.PostMan)
+	fmt.Println("微博内容：", blog.Content)
+
+	//2.展示微博对应评论内容
+	for _, value := range b.Comments[wbid] {
+		fmt.Println("评论人：", value.PostMan)
+		fmt.Println("评论内容：", value.Content)
+	}
 }
 
 //不友好的粉丝
@@ -114,10 +152,10 @@ type BadFans struct {
 	Fans
 }
 
-func (f *BadFans) Update(wbid int) {
+func (f *BadFans) Update(bloggerI BloggerInterface, wbid int) {
 	fmt.Printf("你好%s,你所关注的博主发布了新的微博\n", f.Name)
 }
-func (f *BadFans) Action(wbid int) {
+func (f *BadFans) Action(bloggerI BloggerInterface, wbid int) {
 	//1.获取博主发布的微博
 	blogger := new(Blogger)
 	weibo := blogger.GetWeiBo(wbid)
