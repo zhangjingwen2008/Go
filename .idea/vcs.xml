@@ -2,5 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/github.com/lxn/walk" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/github.com/lxn/win" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/golang.org/x/sys" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/src/gopkg.in/Knetic/govaluate.v3" vcs="Git" />
   </component>
 </project>
