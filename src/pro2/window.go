@@ -26,7 +26,7 @@ func Show(Window_Type string) {
 	var Win Window
 	switch Window_Type {
 	case "main_window":
-		Win = &ComWindow{}
+		Win = new(ComWindow)
 	case "lab_window":
 		Win = &LabWindow{}
 	default:

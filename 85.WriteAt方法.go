@@ -10,6 +10,9 @@ import (
 作用：在内容指定位置写入
 语法：file.WriteAt([]byte, int)   	参数1：插入内容；参数2：插入位置（插入位置在内容中间时，会产生覆盖）
 指定写入位置：file.Seek(int, int)		参数1：光标往后面移动n个位置，即n个空格；参数2：设置为io.SeekEnd时，意为内容的最后位置
+	io.SeekStart：文件起始位置
+	io.SeekCurrent：文件当前位置
+	io.SeekEnd：文件结尾位置
 */
 func main() {
 	//创建文件
