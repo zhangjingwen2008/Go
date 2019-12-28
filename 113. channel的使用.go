@@ -29,6 +29,7 @@ channel：是一种数据类型，对应一个FIFO的“管道”
 var channel = make(chan int)
 
 func main() {
+
 	go person1()
 	go person2()
 
