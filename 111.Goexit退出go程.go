@@ -7,8 +7,8 @@ import (
 
 /*
 return：返回当前函数调用到调用者那里去，return之前的defer都生效
-Goexit()：结束调用该函数的当前go程。Goexit()之前注册的defer都生效
-语法：runtime.Goexit()
+runtime.Goexit()：结束调用该函数的当前go程。Goexit()之前注册的defer都生效。
+os.Exit(1)：结束当前进程。参数0：正常退出；参数非0：异常退出
 */
 func main() {
 
