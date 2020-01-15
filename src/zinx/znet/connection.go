@@ -21,24 +21,29 @@ type Connection struct {
 	//当前的连接状态
 	isClosed bool
 
-	//[ZinxV0.2]
-	////当前连接所绑定的处理业务方法API
-	//handleAPI ziface.HandleFunc
+	//消息的管理MsgID 和对应的处理业务API关系
+	MsgHandler ziface.IMsgHandle
 
 	//告知当前连接已经退出的/停止 channel
 	ExitChan chan bool
 
+	//[ZinxV0.2]
+	////当前连接所绑定的处理业务方法API
+	//handleAPI ziface.HandleFunc
+
+	//【ZinxV0.3】
 	//该链接处理的方法Router
-	Router ziface.IRouter
+	//Router ziface.IRouter
 }
 
 //初始化连接模块的方法
-func NewConnection(conn *net.TCPConn, connID uint32, router ziface.IRouter) *Connection {
+func NewConnection(conn *net.TCPConn, connID uint32, msgHandler ziface.IMsgHandle) *Connection {
 	c := &Connection{
-		Conn:   conn,
-		ConnID: connID,
-		Router: router,
-		//handleAPI: callback_api,		//[ZinxV0.2]
+		Conn:       conn,
+		ConnID:     connID,
+		MsgHandler: msgHandler,
+		//Router: router,				//【ZinxV0.3】
+		//handleAPI: callback_api,		//【ZinxV0.2】
 		isClosed: false,
 		ExitChan: make(chan bool, 1),
 	}
@@ -53,8 +58,8 @@ func (c *Connection) StartReader() {
 	defer c.Stop()
 
 	for {
+		//【ZinxV0.4】
 		//读取客户端数据到buf中
-		//[ZinxV0.4]
 		//buf := make([]byte, utils.GlobalObject.MaxPackageSize)
 		//_, err := c.Conn.Read(buf)
 		//if err != nil {
@@ -93,19 +98,25 @@ func (c *Connection) StartReader() {
 		//得到当前conn数据的Request请求数据
 		req := Request{
 			conn: c,
-			//data: buf,	//[ZinxV0.4]
+			//data: buf,	//【ZinxV0.4】
 			msg: ms,
 		}
 
-		//执行注册的路由方法
-		go func(request ziface.IRequest) {
-			c.Router.PreHandle(request)
-			c.Router.Handle(request)
-			c.Router.PostHandle(request)
-		}(&req)
-		//从路由中，找到注册绑定的Conn对应的route调用
+		//从路由中，找到注册绑定的Conn对应的router调用
+		//根据绑定好的MsgID 找到对应处理api业务 执行
+		go c.MsgHandler.DoMsgHandler(&req)
 
-		////[ZinxV0.2]调用当前连接所绑定的API
+		//【ZinxV0.3】
+		//执行注册的路由方法
+		//go func(request ziface.IRequest) {
+		//	c.Router.PreHandle(request)
+		//	c.Router.Handle(request)
+		//	c.Router.PostHandle(request)
+		//}(&req)
+		////从路由中，找到注册绑定的Conn对应的route调用
+
+		//【ZinxV0.2】
+		//调用当前连接所绑定的API
 		//if err := c.handleAPI(c.Conn, buf, cnt); err != nil {
 		//	fmt.Println("ConnID ", c.ConnID, " handle is error", err)
 		//	break
