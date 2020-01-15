@@ -23,6 +23,6 @@ func main() {
 	if ok {
 		fmt.Println(value)
 	} else {
-		fmt.Println("类型腿短错误")
+		fmt.Println("类型推断错误")
 	}
 }
