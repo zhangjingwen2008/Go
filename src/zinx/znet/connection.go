@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net"
+	"sync"
 	"zinx/utils"
 	"zinx/ziface"
 )
@@ -34,6 +35,12 @@ type Connection struct {
 	//无缓冲的管道，用于读、写Goroutine之间的消息通信
 	msgChan chan []byte
 
+	//连接属性集合
+	property map[string]interface{}
+
+	//保护连接属性修改的锁
+	propertyLock sync.RWMutex
+
 	//【ZinxV0.2】
 	////当前连接所绑定的处理业务方法API
 	//handleAPI ziface.HandleFunc
@@ -55,6 +62,7 @@ func NewConnection(server ziface.IServer, conn *net.TCPConn, connID uint32, msgH
 		isClosed: false,
 		ExitChan: make(chan bool, 1),
 		msgChan:  make(chan []byte),
+		property: make(map[string]interface{}),
 	}
 
 	//将conn加入到ConnManager中
@@ -242,4 +250,34 @@ func (c *Connection) SendMsg(msgId uint32, data []byte) error {
 	//}
 
 	return nil
+}
+
+//设置连接属性
+func (c *Connection) SetProperty(key string, value interface{}) {
+	c.propertyLock.Lock()
+	defer c.propertyLock.Unlock()
+
+	//添加一个连接属性
+	c.property[key] = value
+}
+
+//获取连接属性
+func (c *Connection) GetProperty(key string) (interface{}, error) {
+	c.propertyLock.RLock()
+	defer c.propertyLock.RUnlock()
+
+	//读取属性
+	if value, ok := c.property[key]; ok {
+		return value, nil
+	}
+	return nil, errors.New("no property found")
+}
+
+//移除连接属性
+func (c *Connection) RemoveProperty(key string) {
+	c.propertyLock.Lock()
+	defer c.propertyLock.Unlock()
+
+	//删除属性
+	delete(c.property, key)
 }

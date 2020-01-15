@@ -21,6 +21,13 @@ type IConnection interface {
 
 	//发送数据给远程的客户端
 	SendMsg(msgId uint32, data []byte) error
+
+	//设置连接属性
+	SetProperty(key string, value interface{})
+	//获取连接属性
+	GetProperty(key string) (interface{}, error)
+	//移除连接属性
+	RemoveProperty(key string)
 }
 
 //定义一个处理连接业务的方法
