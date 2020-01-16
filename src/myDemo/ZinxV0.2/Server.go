@@ -11,4 +11,5 @@ func main() {
 	s := znet.NewServer("[zinx V0.2]")
 	//2.启动server
 	s.Serve()
+
 }

@@ -13,3 +13,4 @@ gen
 /rsrc/
 bin/
 pkg/
+/src/protobuf/
