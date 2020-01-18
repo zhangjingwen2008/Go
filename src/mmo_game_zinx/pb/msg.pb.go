@@ -125,139 +125,274 @@ func (m *Position) GetV() float32 {
 }
 
 //广播消息
-type BroadCase struct {
+type BroadCast struct {
 	Pid int32 `protobuf:"varint,1,opt,name=Pid,proto3" json:"Pid,omitempty"`
 	Tp  int32 `protobuf:"varint,2,opt,name=Tp,proto3" json:"Tp,omitempty"`
 	// Types that are valid to be assigned to Data:
-	//	*BroadCase_Content
-	//	*BroadCase_P
-	//	*BroadCase_ActionData
-	Data                 isBroadCase_Data `protobuf_oneof:"Data"`
+	//	*BroadCast_Content
+	//	*BroadCast_P
+	//	*BroadCast_ActionData
+	Data                 isBroadCast_Data `protobuf_oneof:"Data"`
 	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
 	XXX_unrecognized     []byte           `json:"-"`
 	XXX_sizecache        int32            `json:"-"`
 }
 
-func (m *BroadCase) Reset()         { *m = BroadCase{} }
-func (m *BroadCase) String() string { return proto.CompactTextString(m) }
-func (*BroadCase) ProtoMessage()    {}
-func (*BroadCase) Descriptor() ([]byte, []int) {
+func (m *BroadCast) Reset()         { *m = BroadCast{} }
+func (m *BroadCast) String() string { return proto.CompactTextString(m) }
+func (*BroadCast) ProtoMessage()    {}
+func (*BroadCast) Descriptor() ([]byte, []int) {
 	return fileDescriptor_c06e4cca6c2cc899, []int{2}
 }
 
-func (m *BroadCase) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_BroadCase.Unmarshal(m, b)
+func (m *BroadCast) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_BroadCast.Unmarshal(m, b)
 }
-func (m *BroadCase) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_BroadCase.Marshal(b, m, deterministic)
+func (m *BroadCast) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_BroadCast.Marshal(b, m, deterministic)
 }
-func (m *BroadCase) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_BroadCase.Merge(m, src)
+func (m *BroadCast) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_BroadCast.Merge(m, src)
 }
-func (m *BroadCase) XXX_Size() int {
-	return xxx_messageInfo_BroadCase.Size(m)
+func (m *BroadCast) XXX_Size() int {
+	return xxx_messageInfo_BroadCast.Size(m)
 }
-func (m *BroadCase) XXX_DiscardUnknown() {
-	xxx_messageInfo_BroadCase.DiscardUnknown(m)
+func (m *BroadCast) XXX_DiscardUnknown() {
+	xxx_messageInfo_BroadCast.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_BroadCase proto.InternalMessageInfo
+var xxx_messageInfo_BroadCast proto.InternalMessageInfo
 
-func (m *BroadCase) GetPid() int32 {
+func (m *BroadCast) GetPid() int32 {
 	if m != nil {
 		return m.Pid
 	}
 	return 0
 }
 
-func (m *BroadCase) GetTp() int32 {
+func (m *BroadCast) GetTp() int32 {
 	if m != nil {
 		return m.Tp
 	}
 	return 0
 }
 
-type isBroadCase_Data interface {
-	isBroadCase_Data()
+type isBroadCast_Data interface {
+	isBroadCast_Data()
 }
 
-type BroadCase_Content struct {
+type BroadCast_Content struct {
 	Content string `protobuf:"bytes,3,opt,name=Content,proto3,oneof"`
 }
 
-type BroadCase_P struct {
+type BroadCast_P struct {
 	P *Position `protobuf:"bytes,4,opt,name=P,proto3,oneof"`
 }
 
-type BroadCase_ActionData struct {
+type BroadCast_ActionData struct {
 	ActionData int32 `protobuf:"varint,5,opt,name=ActionData,proto3,oneof"`
 }
 
-func (*BroadCase_Content) isBroadCase_Data() {}
+func (*BroadCast_Content) isBroadCast_Data() {}
 
-func (*BroadCase_P) isBroadCase_Data() {}
+func (*BroadCast_P) isBroadCast_Data() {}
 
-func (*BroadCase_ActionData) isBroadCase_Data() {}
+func (*BroadCast_ActionData) isBroadCast_Data() {}
 
-func (m *BroadCase) GetData() isBroadCase_Data {
+func (m *BroadCast) GetData() isBroadCast_Data {
 	if m != nil {
 		return m.Data
 	}
 	return nil
 }
 
-func (m *BroadCase) GetContent() string {
-	if x, ok := m.GetData().(*BroadCase_Content); ok {
+func (m *BroadCast) GetContent() string {
+	if x, ok := m.GetData().(*BroadCast_Content); ok {
 		return x.Content
 	}
 	return ""
 }
 
-func (m *BroadCase) GetP() *Position {
-	if x, ok := m.GetData().(*BroadCase_P); ok {
+func (m *BroadCast) GetP() *Position {
+	if x, ok := m.GetData().(*BroadCast_P); ok {
 		return x.P
 	}
 	return nil
 }
 
-func (m *BroadCase) GetActionData() int32 {
-	if x, ok := m.GetData().(*BroadCase_ActionData); ok {
+func (m *BroadCast) GetActionData() int32 {
+	if x, ok := m.GetData().(*BroadCast_ActionData); ok {
 		return x.ActionData
 	}
 	return 0
 }
 
 // XXX_OneofWrappers is for the internal use of the proto package.
-func (*BroadCase) XXX_OneofWrappers() []interface{} {
+func (*BroadCast) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
-		(*BroadCase_Content)(nil),
-		(*BroadCase_P)(nil),
-		(*BroadCase_ActionData)(nil),
+		(*BroadCast_Content)(nil),
+		(*BroadCast_P)(nil),
+		(*BroadCast_ActionData)(nil),
 	}
+}
+
+//世界聊天
+type Talk struct {
+	Content              string   `protobuf:"bytes,1,opt,name=Content,proto3" json:"Content,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Talk) Reset()         { *m = Talk{} }
+func (m *Talk) String() string { return proto.CompactTextString(m) }
+func (*Talk) ProtoMessage()    {}
+func (*Talk) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c06e4cca6c2cc899, []int{3}
+}
+
+func (m *Talk) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Talk.Unmarshal(m, b)
+}
+func (m *Talk) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Talk.Marshal(b, m, deterministic)
+}
+func (m *Talk) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Talk.Merge(m, src)
+}
+func (m *Talk) XXX_Size() int {
+	return xxx_messageInfo_Talk.Size(m)
+}
+func (m *Talk) XXX_DiscardUnknown() {
+	xxx_messageInfo_Talk.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Talk proto.InternalMessageInfo
+
+func (m *Talk) GetContent() string {
+	if m != nil {
+		return m.Content
+	}
+	return ""
+}
+
+//同步玩家的显示数据
+type SyncPlayers struct {
+	Ps                   []*Player `protobuf:"bytes,1,rep,name=ps,proto3" json:"ps,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *SyncPlayers) Reset()         { *m = SyncPlayers{} }
+func (m *SyncPlayers) String() string { return proto.CompactTextString(m) }
+func (*SyncPlayers) ProtoMessage()    {}
+func (*SyncPlayers) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c06e4cca6c2cc899, []int{4}
+}
+
+func (m *SyncPlayers) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SyncPlayers.Unmarshal(m, b)
+}
+func (m *SyncPlayers) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SyncPlayers.Marshal(b, m, deterministic)
+}
+func (m *SyncPlayers) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SyncPlayers.Merge(m, src)
+}
+func (m *SyncPlayers) XXX_Size() int {
+	return xxx_messageInfo_SyncPlayers.Size(m)
+}
+func (m *SyncPlayers) XXX_DiscardUnknown() {
+	xxx_messageInfo_SyncPlayers.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SyncPlayers proto.InternalMessageInfo
+
+func (m *SyncPlayers) GetPs() []*Player {
+	if m != nil {
+		return m.Ps
+	}
+	return nil
+}
+
+//玩家信息
+type Player struct {
+	Pid                  int32     `protobuf:"varint,1,opt,name=Pid,proto3" json:"Pid,omitempty"`
+	P                    *Position `protobuf:"bytes,2,opt,name=P,proto3" json:"P,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}  `json:"-"`
+	XXX_unrecognized     []byte    `json:"-"`
+	XXX_sizecache        int32     `json:"-"`
+}
+
+func (m *Player) Reset()         { *m = Player{} }
+func (m *Player) String() string { return proto.CompactTextString(m) }
+func (*Player) ProtoMessage()    {}
+func (*Player) Descriptor() ([]byte, []int) {
+	return fileDescriptor_c06e4cca6c2cc899, []int{5}
+}
+
+func (m *Player) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Player.Unmarshal(m, b)
+}
+func (m *Player) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Player.Marshal(b, m, deterministic)
+}
+func (m *Player) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Player.Merge(m, src)
+}
+func (m *Player) XXX_Size() int {
+	return xxx_messageInfo_Player.Size(m)
+}
+func (m *Player) XXX_DiscardUnknown() {
+	xxx_messageInfo_Player.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Player proto.InternalMessageInfo
+
+func (m *Player) GetPid() int32 {
+	if m != nil {
+		return m.Pid
+	}
+	return 0
+}
+
+func (m *Player) GetP() *Position {
+	if m != nil {
+		return m.P
+	}
+	return nil
 }
 
 func init() {
 	proto.RegisterType((*SyncPid)(nil), "pb.SyncPid")
 	proto.RegisterType((*Position)(nil), "pb.Position")
-	proto.RegisterType((*BroadCase)(nil), "pb.BroadCase")
+	proto.RegisterType((*BroadCast)(nil), "pb.BroadCast")
+	proto.RegisterType((*Talk)(nil), "pb.Talk")
+	proto.RegisterType((*SyncPlayers)(nil), "pb.SyncPlayers")
+	proto.RegisterType((*Player)(nil), "pb.Player")
 }
 
 func init() { proto.RegisterFile("msg.proto", fileDescriptor_c06e4cca6c2cc899) }
 
 var fileDescriptor_c06e4cca6c2cc899 = []byte{
-	// 219 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0xcc, 0x2d, 0x4e, 0xd7,
-	0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x2a, 0x48, 0x52, 0x92, 0xe6, 0x62, 0x0f, 0xae, 0xcc,
-	0x4b, 0x0e, 0xc8, 0x4c, 0x11, 0x12, 0xe0, 0x62, 0x0e, 0xc8, 0x4c, 0x91, 0x60, 0x54, 0x60, 0xd4,
-	0x60, 0x0d, 0x02, 0x31, 0x95, 0x9c, 0xb8, 0x38, 0x02, 0xf2, 0x8b, 0x33, 0x4b, 0x32, 0xf3, 0xf3,
-	0x84, 0x78, 0xb8, 0x18, 0x23, 0xc0, 0x72, 0x4c, 0x41, 0x8c, 0x11, 0x20, 0x5e, 0xa4, 0x04, 0x13,
-	0x84, 0x17, 0x09, 0xe2, 0x45, 0x49, 0x30, 0x43, 0x78, 0x51, 0x20, 0x5e, 0x98, 0x04, 0x0b, 0x84,
-	0x17, 0xa6, 0x34, 0x91, 0x91, 0x8b, 0xd3, 0xa9, 0x28, 0x3f, 0x31, 0xc5, 0x39, 0xb1, 0x38, 0x15,
-	0xd3, 0x0e, 0x21, 0x3e, 0x2e, 0xa6, 0x90, 0x02, 0xb0, 0x51, 0xac, 0x41, 0x4c, 0x21, 0x05, 0x42,
-	0x52, 0x5c, 0xec, 0xce, 0xf9, 0x79, 0x25, 0xa9, 0x79, 0x25, 0x60, 0x13, 0x39, 0x3d, 0x18, 0x82,
-	0x60, 0x02, 0x42, 0x32, 0x5c, 0x8c, 0x01, 0x60, 0x93, 0xb9, 0x8d, 0x78, 0xf4, 0x0a, 0x92, 0xf4,
-	0x60, 0x8e, 0xf3, 0x60, 0x08, 0x62, 0x0c, 0x10, 0x52, 0xe0, 0xe2, 0x72, 0x4c, 0x06, 0x71, 0x5d,
-	0x12, 0x4b, 0x12, 0x25, 0x58, 0x41, 0x26, 0x7a, 0x30, 0x04, 0x21, 0x89, 0x39, 0xb1, 0x71, 0xb1,
-	0x80, 0x69, 0xd6, 0x55, 0x4c, 0x4c, 0x01, 0x49, 0x49, 0x6c, 0xe0, 0x60, 0x30, 0x06, 0x04, 0x00,
-	0x00, 0xff, 0xff, 0xc3, 0xfa, 0x96, 0x65, 0x13, 0x01, 0x00, 0x00,
+	// 277 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x91, 0xbd, 0x4e, 0xc3, 0x30,
+	0x14, 0x85, 0x63, 0xe7, 0xa7, 0xe4, 0xa6, 0x42, 0xc8, 0x93, 0x15, 0x18, 0x22, 0x4f, 0x65, 0xc9,
+	0x50, 0x24, 0x76, 0x52, 0x86, 0x8c, 0x96, 0x89, 0xaa, 0xb6, 0x9b, 0xd3, 0x54, 0x28, 0xa2, 0xc4,
+	0x56, 0xec, 0xa5, 0x8f, 0xc1, 0x6b, 0xf0, 0x94, 0xc8, 0x8e, 0x0a, 0x48, 0xed, 0x64, 0x7f, 0xf7,
+	0x48, 0xe7, 0x1c, 0xfb, 0x42, 0xfa, 0x69, 0xde, 0x4b, 0x3d, 0x2a, 0xab, 0x08, 0xd6, 0x2d, 0xbb,
+	0x87, 0xd9, 0xdb, 0x69, 0xd8, 0xf3, 0xbe, 0x23, 0x77, 0x10, 0xf2, 0xbe, 0xa3, 0xa8, 0x40, 0x8b,
+	0x58, 0xb8, 0x2b, 0xab, 0xe0, 0x86, 0x2b, 0xd3, 0xdb, 0x5e, 0x0d, 0x64, 0x0e, 0x68, 0xe3, 0x35,
+	0x2c, 0xd0, 0xc6, 0xd1, 0x96, 0xe2, 0x89, 0xb6, 0x8e, 0x76, 0x34, 0x9c, 0x68, 0xe7, 0x68, 0x4d,
+	0xa3, 0x89, 0xd6, 0xec, 0x0b, 0x41, 0x5a, 0x8d, 0x4a, 0x76, 0x2b, 0x69, 0xec, 0x65, 0x06, 0xb9,
+	0x05, 0xdc, 0x68, 0x6f, 0x15, 0x0b, 0xdc, 0x68, 0x92, 0xc3, 0x6c, 0xa5, 0x06, 0x7b, 0x18, 0xac,
+	0x77, 0x4c, 0xeb, 0x40, 0x9c, 0x07, 0xe4, 0x01, 0x10, 0xf7, 0xce, 0xd9, 0x72, 0x5e, 0xea, 0xb6,
+	0x3c, 0x97, 0xab, 0x03, 0x81, 0x38, 0x29, 0x00, 0x5e, 0xf6, 0x0e, 0x5f, 0xa5, 0x95, 0x34, 0x76,
+	0x8e, 0x75, 0x20, 0xfe, 0xcd, 0xaa, 0x04, 0x22, 0x77, 0xb2, 0x02, 0xa2, 0x46, 0x1e, 0x3f, 0x08,
+	0xfd, 0xcb, 0x72, 0x8d, 0xd2, 0xdf, 0x24, 0xf6, 0x08, 0x99, 0xff, 0x96, 0xa3, 0x3c, 0x1d, 0x46,
+	0x43, 0x72, 0xc0, 0xda, 0x50, 0x54, 0x84, 0x8b, 0x6c, 0x09, 0x3e, 0xd9, 0x0b, 0x02, 0x6b, 0xc3,
+	0x9e, 0x21, 0x99, 0xe8, 0xca, 0xe3, 0x72, 0x57, 0x18, 0x5f, 0x16, 0x16, 0x88, 0x57, 0xf1, 0x37,
+	0xc6, 0xbc, 0x6d, 0x13, 0xbf, 0x8b, 0xa7, 0x9f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x06, 0xc6, 0xe9,
+	0xe1, 0x98, 0x01, 0x00, 0x00,
 }
