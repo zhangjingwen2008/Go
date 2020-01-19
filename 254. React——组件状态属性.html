@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script>
+        /*
+            状态state：
+                - 组建的默认
+         */
+    </script>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        class HelloHunter extends React.Component {
+            //定义click事件的处理方法
+            fnHello(){
+                alert(this.props.name);
+            }
+
+            render() {
+                return (
+                    <input type="button" value="打招呼" onClick={this.fnHello.bind(this)}/>
+                );
+            }
+        }
+
+        ReactDOM.render(<HelloHunter name="Hunter"/>, document.getElementById('root'));
+
+    </script>
+
+</body>
+</html>

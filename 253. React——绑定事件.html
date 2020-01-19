@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script>
+        /*
+            绑定事件
+                - 若要传递参数，则必须传入一个this，否则会报指定不明的错误
+                - 调用方法若要传参时，需要使用.bind()来传递参数
+                - 使用：
+                    class Helloname extends React.Component {
+                        fnHello(){
+                            alert(this.props.name);                 //要接收this才能正常获得对象
+                        }
+
+                        render(){
+                            return (
+                                <input type="button" onClick={this.fnHello.bind(this)};          //调用方法要传入this
+                            );
+                        }
+                    }
+         */
+    </script>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        class HelloHunter extends React.Component {
+            //定义click事件的处理方法
+            fnHello(){
+                alert(this.props.name);
+            }
+
+            render() {
+                return (
+                    <input type="button" value="打招呼" onClick={this.fnHello.bind(this)}/>
+                );
+            }
+        }
+
+        ReactDOM.render(<HelloHunter name="Hunter"/>, document.getElementById('root'));
+
+    </script>
+
+</body>
+</html>

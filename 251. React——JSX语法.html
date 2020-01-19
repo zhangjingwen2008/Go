@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .sty01 {
+            font-size: 30px;
+            color: red;
+        }
+    </style>
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script>
+        /*
+            JSX语法类似html标签语法，作用是让我们可以在JavaScript中直接写HTML代码。
+         */
+    </script>
+</head>
+<body>
+    <!-- 浏览器中仅显示这个标签 -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+        let iNum01 = 10;
+        let str = 'dfsa2903';
+        let ok = true;
+        let url = 'www.baidu.com';
+        function fnRev(s){
+            return s.split('').reverse().join('');
+        }
+
+        {/* 只是语句的外层只可有1个标签，内层就可随意编写 */}
+        let el = (
+            <div>
+                <h2>jsx语法</h2>
+                <p>显示变量操作：{iNum01 + 5}:{iNum01 + 10}</p>               {/* 调用变量，进行操作 */}
+                <p>字符串操作：{str.split('').reverse().join('')}</p>         {/* 字符串操作 */}
+                <p>方法调用：{fnRev(str)}</p>                                 {/* 调用方法 */}
+                <p>三元表达式：{ok ? 'YES' : 'NO'}</p>                        {/* 三元表达式 */}
+                <a href={url}>这是一个链接</a>                                {/* 定义属性 */}
+                <div className="sty01">绑定样式</div>                         {/* 绑定样式，不用class而用className */}
+            </div>
+        );
+
+        {/* 将编写好的标签内容绑定到开头的div标签里，即可渲染到浏览器 */}
+        ReactDOM.render(el, document.getElementById('root'));
+    </script>
+
+</body>
+</html>

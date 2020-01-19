@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script>
+        /*
+            定义组件方式一：函数式
+                - 定义函数的方式
+                - 组件名称首字母大写
+                - 函数接收一个参数props
+                - 返回一个jsx对象
+                - 定义：
+                    function Welcome(props) {
+                        return <h1>Hello, {props.name}</h1>;
+                    }
+                - 调用：
+                    const element = <Welcome name="Hunter" />;
+                    ReactDOM.render(element, document.getElementById('root'));
+
+
+            定义组件方式二：类方式
+                - 定义类的方式
+                - 继承React.Component
+                - 必须实现Render(){}方法
+                - 定义：
+                    class Welcome extends React.Component {
+                        render() {
+                            return <h1>Hello, {this.props.name}</h1>;
+                        }
+                    }
+                - 调用： 与方式一函数式的调用一样
+
+
+            组件组合:
+                - 可以在一个组件内，拼装其他组件，从而组成一个更大的组件
+                - 调用渲染时，需要将类名/方法名用标签符号括起来
+                - 使用：
+                    function App(){
+                        return (
+                            <div>
+                                <Welcome name='Hunter'/>
+                                <Welcome name='Sally'/>
+                            </div>
+                        );
+                    }
+
+                    ReactDOM.render(<App />, document.getElementById('root');
+         */
+    </script>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        //通过类的方式定义组件
+        class Welcome extends React.Component {
+            render() {
+                return (
+                    <h1>Hello,{this.props.name}</h1>
+                );
+            }
+        }
+
+        //定义一个大的组件，组合上面的组件
+        class WelcomeAll extends React.Component {
+            render() {
+                return (
+                    <div>
+                        <Welcome name="Hunter"/>
+                        <Welcome name="Sally"/>
+                        <Welcome name="Liangzai"/>
+                    </div>
+                );
+            }
+        }
+
+        //渲染组件
+        ReactDOM.render(<WelcomeAll/>,document.getElementById('root'))
+    </script>
+
+</body>
+</html>
