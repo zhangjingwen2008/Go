@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+    <script>
+        window.onload = function () {
+            var list01 = ['a', 'b', 'c', 'd', 'e', 'b', 'd', 'a'];
+            var eUL = document.getElementById("ul01");
+            var str = ''
+
+            for(var i=0;i<list01.length;i++) {          //循环构造HTML语句
+                str += '<ol>' + list01[i] + '</ol>';
+            }
+
+            eUL.innerHTML = str;        //赋值入innerHTML属性即可
+        };
+    </script>
+<body>
+    <ul id="ul01"></ul>
+</body>
+</html>

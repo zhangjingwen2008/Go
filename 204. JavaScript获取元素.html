@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script>
+        //window.onload：当整个页面加载完之后，再执行大括号里的代码。要不然就把JavaScript代码放到主页面代码后面，否则会出现页面无样式，因为主代码还没出来样式就先执行完了
+        window.onload=function(){
+            var eDiv=document.getElementById('div01');      //获取元素
+
+            document.getElementById('div01').style.color='green';
+            eDiv.style.background='gold';
+        }
+    </script>
+
+</head>
+<body>
+    <div id="div01">This is a div Element!</div>
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .style01{
+            color:green;
+        }
+        .style02{
+            color:pink;
+        }
+    </style>
+
+    <script>
+        window.onload = function () {
+            var eDiv = document.getElementById('div01');
+            var eBtn = document.getElementById('btn');
+
+            //定义事件
+            function fnChange() {
+                eDiv.style.color = 'blue';
+            }
+
+            //绑定触发事件
+            // eBtn.onclick = fnChange();
+            eBtn.onclick = fnChange;
+        };
+    </script>
+
+</head>
+<body>
+    <input type="button" value="Change CSS" id="btn">
+    <div id="div01">This is a div Element!</div>
+</body>
+</html>

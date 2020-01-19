@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload = function () {
+            //封闭函数：匿名函数的另一种写法，创建一个一开始就执行而不用命名的函数
+            //定义方式一：使用小括号
+            (function () {
+                alert('hello');
+            });
+
+            //定义方式二：使用感叹号
+            !function () {
+                alert('hello');
+            };
+
+            //定义方式三：使用波浪线
+            ~function () {
+                alert('hello');
+            };
+
+            //一个引号就是一个js语句，所以;;;这种方式也是正确的。在封闭函数最前面放一个分号，可以防止在压缩时发生上一个语句与当前封闭函数拼接在了一起的情况
+        };
+    </script>
+</head>
+<body>
+
+</body>
+</html>

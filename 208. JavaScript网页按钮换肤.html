@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- 导入CSS样式，并赋予id属性以供更改文件 -->
+    <link ref="stylesheet" href="208skin01.css" id="link01">
+    <script>
+        window.onload = function () {
+            var btn1 = document.getElementById('btn01');
+            var btn2 = document.getElementById('btn02');
+            var link = document.getElementById('link01');       //绑定引入link
+
+            btn1.onclick = function () {        //按钮1绑定事件
+                link.href='208skin02.css'
+            };
+            btn2.onclick = function () {        //按钮2绑定事件
+                link.href='208skin1.css'
+            };
+        };
+    </script>
+</head>
+<body>
+    <h1>网页内容</h1>
+    <input type="button" value="skin 1 " id="btn01">
+    <input type="button" value="skin 2 " id="btn02">
+</body>
+</html>

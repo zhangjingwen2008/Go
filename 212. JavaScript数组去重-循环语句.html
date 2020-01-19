@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        var list01 = ['a', 'b', 'c', 'd', 'e', 'b', 'd', 'a'];
+        var list02 = [];
+
+        for (var i = 0; i < list01.length; i++) {
+            if (list01.indexOf(list01[i]) == i) {       //若是重复元素，则当前i会与indexOf不一致，则不会被收入
+                list02.push(list01[i]);
+            }
+        }
+
+        alert(list02);
+    </script>
+</head>
+<body>
+
+</body>
+</html>

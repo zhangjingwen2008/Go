@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .style01{
+            color:green;
+        }
+        .style02{
+            color:pink;
+        }
+    </style>
+
+    <script>
+        window.onload = function () {
+            var eDiv = document.getElementById('div01');
+            var eBtn = document.getElementById('btn');
+
+            /*
+            函数定义方式一：取名字
+            function fnChange() {
+                eDiv.style.color = 'blue';
+            }
+            eBtn.onclick = fnChange;
+            */
+
+            //函数定义方式二：匿名函数。避免了多个单调方法会取多个名称的冗余弊端，取而代之的是直接与方法进行绑定
+            eBtn.onclick = function () {
+                eDiv.style.color = 'blue';
+            };
+        };
+    </script>
+
+</head>
+<body>
+    <input type="button" value="Change CSS" id="btn">
+    <div id="div01">This is a div Element!</div>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .style01{
+            color:green;
+        }
+        .style02{
+            color:pink;
+        }
+    </style>
+
+    <script>
+        window.onload=function(){
+         //【操作id属性】
+            var eDiv = document.getElementById('div01');
+            //读取元素
+            var rDiv = eDiv.id;
+            alert(rDiv);
+            //写属性值、设置属性值，设置标签中id属性值
+            eDiv.style.color = 'red';
+            //属性名称带“-”的，要改成驼峰式
+            eDiv.style.fontSize = '30px';
+
+        //【操作class属性】
+            //设置标签中class属性值
+            var eLink = document.getElementById('link01');
+            eLink.className = 'style02';        //调用class的话为内建字，无法对应，故要使用ClassName才能匹配设置
+
+        //【innerHTML】
+            //用于操作标签内包裹的内容
+            var innerA = document.getElementById('link01');
+            innerA.innerHTML='changed!'
+        }
+    </script>
+
+</head>
+<body>
+    <div id="div01">This is a div Element!</div>
+    <a href="#" class="style01" id="link01">A Link</a>
+</body>
+</html>

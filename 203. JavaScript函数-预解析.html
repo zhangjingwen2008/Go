@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script>
+        //函数调用：函数在下面定义，在上面调用，这个叫做函数的预解析
+        fnMyalert();
+        //定义函数
+        function fnMyalert() {
+            alert('hello!');
+        }
+
+        //变量预解析：声明提前了，但初始化没提前，导致预解析的变量调用值为undefined
+        alert(num);     //不会报错，但值为undefined
+        var num=12;
+        alert(num);     //正常调用，值为12
+    </script>
+
+</head>
+<body>
+
+</body>
+</html>

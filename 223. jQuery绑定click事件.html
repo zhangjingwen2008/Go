@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-1.12.4.js"></script>
+    <script>
+        //给元素绑定click事件
+        $("#div1").click(function () {
+
+            //使用this时，在这里指向的是$("#div1")的原生对象，即要用原生的JavaScrip语句才可操作
+
+            //使用$(this)时，在这里指向的就是$("#div1")对象，即可以使用jQuery语句进行操作了
+
+        });
+
+        //获取元素索引值：有时候需要获得匹配元素相对于其同胞元素的索引位置，此时可以用index()方法获取
+        var $li = $('.list li').eq(1);
+        alert($li.index());     //弹出1
+    </script>
+</head>
+<body>
+
+    <ul class="list">
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+        <li>4</li>
+    </ul>
+
+</body>
+</html>

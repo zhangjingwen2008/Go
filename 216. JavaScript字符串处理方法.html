@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload = function () {
+            var num01 = 12;
+            var num02 = 12.32;
+            var num03 = "12";
+            var num04 = "12.55";
+
+            //【+】：运算符号，若符号两边为数字，则作加法运算；若符号两边有一边为字符串，则做字符串拼接
+            alert(num01 + 10);
+            alert(num03 + 10);
+
+            //【parseInt()】：将整数字符串转换为小数
+            alert(parseInt(num03) + 10);
+
+            //【parseFloat()】：将小数字符串转换为小数
+            alert(parseFloat(num04) + 10);
+
+            //【split()】：将字符串分割为数组
+            var date = '2019-12-30';
+            var list = date.split('-');     //按“-”分割，结果为3个元素2019、12、30
+            var list02 = data.split('');    //全部分割，结果为元字符串长度，内容为2,0,1,9,-,1,2,-,3,0
+            alert(list);
+            alert(list02);
+
+            //【indexOf()】：找到指定字符在字符串中第1次出现的位置
+
+            //【substring()】：截取字符串
+            var str2 = "abcdefg";
+            alert(str2.substring(2, 5));
+
+            //字符串反转
+            var str3 = "dasffdasfafvjiqopj";
+            var str4 = str3.split('').reverse().join();
+            alert(str4);
+        };
+    </script>
+</head>
+<body>
+
+</body>
+</html>

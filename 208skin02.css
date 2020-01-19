@@ -1,0 +1,11 @@
+body {
+    background: gold;
+}
+
+input {
+    width: 200px;
+    height: 50px;
+    background: pink;
+    border-radius: 25px;
+    border: 0;
+}

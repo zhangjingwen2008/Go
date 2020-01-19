@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .box {
+            width: 200px;
+            height: 200px;
+            background: gold;
+            position: fixed;
+            top: 100px;
+            left: 100px;
+        }
+    </style>
+
+    <script>
+        window.onload = function () {
+            var ebox = document.getElementById("box");
+            var iLeft = 0;
+            var iSpeed = 3;
+            var timer = setInterval(fnMove, 1);
+
+            function fnMove() {
+                iLeft += iSpeed;         //每次移动固定单元
+                if (iLeft > 600) {      //超过一定值就改变动作
+                    // clearInterval(timer);
+                    iSpeed = -1;        //方块相反运动
+                }
+                if (iLeft <= 0) {
+                    iSpeed = 1;
+                }
+                ebox.style.left = iLeft + 'px';
+            }
+        };
+    </script>
+</head>
+<body>
+    <div class="box" id="box"></div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        window.onload = function () {
+            var a = "12";
+            var b = 12;
+
+            if(a==b){
+                alert('相等');
+            }else{
+                alert('不等');
+            }
+
+            //双等号"=="：默认会将符号两边的变量转换成数字再进行对比，这叫隐式转换
+            if(a==12){
+                alert('相等');
+            }else{
+                alert('不等');
+            }
+
+            //双三等号"==="：不会转换符号两边的变量类型，若类型不一样，既为false
+            if(a===b){
+                alert('相等');
+            }else{
+                alert('不等');
+            }
+        };
+    </script>
+</head>
+<body>
+
+</body>
+</html>
