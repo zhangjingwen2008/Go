@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/axios.min.js"></script>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+
+    <script>
+        /*
+            数据交互：
+                - React没有集成ajax功能，若以要用axios.js来做ajax交互，下载地址：https://github.com/axios/axios/releases
+
+            axios使用
+                - 常用参数：
+                    1.url 请求地址
+                    2.method 请求方式，默认是'GET'，常用的还有'POST'
+                    3.responsetype 设置返回的数据格式，常用的是'json'格式，也可以设置为'text'或'html'
+                    4.params 设置发送给服务器的数据
+                    5.then 设置请求成功后的回调函数
+                    6.catch 设置请求失败后的回调函数
+                - 完整写法：
+                    axios({
+                        url: '/user/123',
+                        method: 'get',
+                        responsetype: 'json',
+                        params: {
+                            firstName: 'Hunter',
+                            lastName: 'Sally'
+                        }
+                    })
+                    .then(function (response) {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                - 执行get请求：
+                    axios.get('/user?ID=123')
+                    .then(function (response) {
+                        console.log(response);
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+         */
+    </script>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        class Hello extends React.Component {
+
+            constructor(props) {
+                super(props);
+                this.state = {
+                    list: []
+                };
+            }
+
+            componentDidMount(){
+                axios({                     //axios访问数据
+                    url: 'js.data.json',
+                    method: 'get',
+                    responsetype: 'json'
+                }).then(resp => {           //获取访问成功后的数据操作(需要使用箭头函数才可正常访问，使用function的话会出现this指定不明的错误)
+                    let resultList = resp.data;
+                    this.setState({
+                        list: resultList
+                    });
+                }).catch(function () {
+                    alert('服务器超时！');
+                });
+            }
+
+            componentWillUnmount(){
+            }
+
+            render(){
+                return ();
+            }
+        }
+
+        ReactDOM.render(<Hello/>, document.getElementById('root'));
+    </script>
+
+</body>
+</html>

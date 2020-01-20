@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script>
+        /*
+            表单数据绑定：
+                - 通过在表单元件上绑定onchange事件，可以实现值的双向数据绑定
+                - 使用：
+                    class Inputxt extends React.Component{
+                        constructor(props) {
+                            super(props);
+                            this.state={iNum: 10}
+                        }
+
+                        fnChange(ev){                   //ev是系统自动产生的时间对象
+                            this.setState({
+                                iNum: ev.target.value   //ev.target指的是发生事件的元素
+                            })
+                        }
+
+                        render() {
+                            return (
+                                <div>
+                                    <p>{this.state.iNum}</p>
+                                    <input type="text" value={this.state.iNum} onChange={this.fnChange.bind(this)}/>        //使用onChange事件绑定
+                                </div>
+                            );
+                        }
+                    }
+         */
+    </script>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        class Inputxt extends React.Component{
+            constructor(props) {
+                super(props);
+                this.state={iNum: 10}
+            }
+
+            fnChange(ev){
+                this.setState({
+                    iNum: ev.target.value
+                })
+            }
+
+            render() {
+                return (
+                    <div>
+                        <p>{this.state.iNum}</p>
+                        <input type="text" value={this.state.iNum} onChange={this.fnChange.bind(this)}/>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<Inputxt/>, document.getElementById('root'));
+    </script>
+
+</body>
+</html>

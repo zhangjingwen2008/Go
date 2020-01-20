@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <script>
+        /*
+            列表渲染：
+                - 将数组中的数据，通过数组遍历渲染成一个JSX对象
+                - 使用map方法进行遍历，map的第1个参数是具体数据，第2个参数是数组中的索引值
+                - 使用：
+                    let list=['wahaha','liangZai','Hunter'];
+
+                    let el = list.map((item,i) =>               //使用map进行遍历
+                        <li key = {i}>{ item }</li>             //最好遍历每项都加上key
+                    };
+
+                    ReacDOM.render(el,...);
+         */
+    </script>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        let list = ['wahaha', 'Hunter', 'Sally'];
+
+        let el = list.map((item, i) =>
+            <li key={i}>{item}</li>
+        );
+
+        ReactDOM.render(<ul>{el}</ul>, document.getElementById('root'));        //把JSX对象用<ul>标签包裹
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://cdn.staticfile.org/react/16.4.0/umd/react.development.js"></script>
+    <script src="https://cdn.staticfile.org/react-dom/16.4.0/umd/react-dom.development.js"></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script>
+        /*
+            生命周期方法：
+                - 指的是组件在初始化后、销毁前，会自动执行的两个方法
+                - 初始化后执行的方法：componentDidMount()
+                - 销毁前执行的方法：componentWillUnmount()
+                - 使用：
+                    class Hello extends React.Component{
+                        ...
+                        componentDidMount(){                    //组件初始化时自动调用的方法
+                            console.log('组件开始！');
+                        }
+                        componentWillUnmount(){                 //组件销毁时自动执行的方法
+                            console.log('组件结束！');
+                        }
+                        ...
+                    }
+         */
+    </script>
+</head>
+<body>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        class Hello extends React.Component {
+
+            componentDidMount(){
+                console.log('组件开始！！');
+            }
+
+            componentWillUnmount(){
+                console.log('组件结束！！');
+            }
+
+            render(){
+                return (
+                    <h1>Hello World</h1>
+                );
+            }
+        }
+
+        ReactDOM.render(<Hello/>, document.getElementById('root'));
+        setTimeout(() => {          //设置3秒后渲染另一个JSX，以模拟组件退出
+            ReactDOM.render(<h1>Bye Bye!</h1>, document.getElementById('root'));
+        }, 3000);
+    </script>
+
+</body>
+</html>

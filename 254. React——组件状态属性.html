@@ -10,7 +10,31 @@
     <script>
         /*
             状态state：
-                - 组建的默认
+                - 用来作为组建的默认属性，而且是可变的
+                - 用构造函数对组件进行初始化
+                - 使用：
+                    class Increase extends React.Component{
+                        constructor(props){                         //编写构造函数
+                            super(props);
+                            this.state={iNum:10};                   //初始化默认值
+                            this.fnAdd = this.fnAdd.bind(this);     //初始化时就将方法绑定this
+                        }
+
+                        fnAdd(){
+                            this.setState(prevState=>({             //prevState指的是state最新的值
+                                iNum:prevState.iNum+1;              //使用setState来改变state中的值
+                            }));
+                        }
+
+                        render(){
+                            return (
+                                <div>
+                                    <p>{ this.state.iNum }</p>
+                                    <input type="button" onClick={ this.fnAdd } value="递增"/>        //由于初始化时已经给方法绑定了this，所以调用时直接调用方法名即可
+                                </div>
+                            );
+                        }
+                    }
          */
     </script>
 </head>
@@ -19,21 +43,29 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        class HelloHunter extends React.Component {
-            //定义click事件的处理方法
-            fnHello(){
-                alert(this.props.name);
+        class Increase extends React.Component {
+            constructor(props) {
+                super(props);
+                this.state = {iNum: 10};
+                this.fnAdd = this.fnAdd.bind(this);
+            }
+            fnAdd(){
+                this.setState(prevState => ({
+                    iNum: prevState.iNum + 1
+                }));
             }
 
             render() {
                 return (
-                    <input type="button" value="打招呼" onClick={this.fnHello.bind(this)}/>
+                    <div>
+                        <p>{this.state.iNum}</p>
+                        <input type="button" value="递增" onClick={this.fnAdd}/>
+                    </div>
                 );
             }
         }
 
-        ReactDOM.render(<HelloHunter name="Hunter"/>, document.getElementById('root'));
-
+        ReactDOM.render(<Increase/>, document.getElementById('root'));
     </script>
 
 </body>
