@@ -50,6 +50,15 @@ func (this *UserController) HandlePost() {
 
 //展示登录页面
 func (this *UserController) ShowLogin() {
+	//获取Cookie且设置到页面
+	userName := this.Ctx.GetCookie("userName")
+	if userName == "" {
+		this.Data["userName"] = ""
+		this.Data["checked"] = ""
+	} else {
+		this.Data["userName"] = userName
+		this.Data["checked"] = "checked"
+	}
 	this.TplName = "login.html"
 }
 
@@ -82,7 +91,27 @@ func (this *UserController) HandleLogin() {
 		return
 	}
 
+	//设置Cookie存用户名
+	remember := this.GetString("remember")
+	if remember == "on" {
+		this.Ctx.SetCookie("userName", userName, 100)
+	} else {
+		this.Ctx.SetCookie("userName", userName, -1)
+	}
+
+	//设置Session
+	this.SetSession("userName", userName)
+
 	//4.返回页面
 	//this.Ctx.WriteString("登陆成功")
 	this.Redirect("/showArticleList", 302)
+}
+
+//退出登录
+func (this *UserController) Logout() {
+	//删除session
+	this.DelSession("userName")
+
+	//退出到登录页面
+	this.Redirect("/login", 302)
 }

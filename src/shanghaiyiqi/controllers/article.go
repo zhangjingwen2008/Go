@@ -1,8 +1,11 @@
 package controllers
 
 import (
+	"bytes"
+	"encoding/gob"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
+	"github.com/gomodule/redigo/redis"
 	"math"
 	"path"
 	"shanghaiyiqi/models"
@@ -15,6 +18,13 @@ type ArticleController struct {
 
 //展示文章列表页
 func (this *ArticleController) ShowArticleList() {
+	//session判断是否登录
+	userName := this.GetSession("userName")
+	if userName == nil {
+		this.Redirect("/login", 302)
+		return
+	}
+
 	//获取数据
 	//高级查询
 	//指定表
@@ -27,10 +37,11 @@ func (this *ArticleController) ShowArticleList() {
 	//}
 
 	//查询总记录数
-	count, _ := qs.Count()
+	typeName := this.GetString("select")
+	var count int64
+
 	//获取总页数
 	pageSize := 2
-	pageCount := math.Ceil(float64(count) / float64(pageSize)) //天花板函数：两个浮点数相除，向上取整；地板函数，向下取整
 
 	//获取页码
 	pageIndex, err := this.GetInt("pageIndex") //获得页码
@@ -43,22 +54,64 @@ func (this *ArticleController) ShowArticleList() {
 	//RelatedSel()：一对多时绑定一的那一端的对象，这样才能从“多”端调用“一”端
 	qs.Limit(pageSize, start).RelatedSel("ArticleType").All(&articles)
 
+	if typeName == "" {
+		count, _ = qs.Count()
+	} else {
+		count, _ = qs.Limit(pageSize, start).RelatedSel("ArticleType").Filter("ArticleType__TypeName", typeName).Count()
+	}
+	pageCount := math.Ceil(float64(count) / float64(pageSize)) //天花板函数：两个浮点数相除，向上取整；地板函数，向下取整
+
 	//获取文章类型
 	var types []models.ArticleType
-	o.QueryTable("ArticleType").All(&types)
+
+	conn, err := redis.Dial("tcp", ":6379")
+	//判断：若redis中有则直接取；若没有则从数据库取，取完放入redis
+	rep, err := conn.Do("get", "types")
+	if rep == nil {
+		o.QueryTable("ArticleType").All(&types)
+		//redis存
+		//针对从redis中无法存取结构体的问题，使用序列化和反序列化的方案
+		var buffer bytes.Buffer
+		enc := gob.NewEncoder(&buffer) //获取编码器
+		enc.Encode(types)              //编码
+		conn.Do("set", "types", buffer.Bytes())
+	} else {
+		//redis取
+		data, _ := redis.Bytes(rep, err)
+		dec := gob.NewDecoder(bytes.NewReader(data)) //解码
+		dec.Decode(types)
+	}
+
 	this.Data["types"] = types
 
 	//根据选中的类型查询相应类型文章
-	typeName := this.GetString("select")
 	//Filter()：过滤器，使用双下划线指定表下的特定字段
-	qs.Limit(pageSize, start).RelatedSel("ArticleType").Filter("ArticleType__TypeName", typeName).All(&articles)
+	if typeName == "" {
+		qs.Limit(pageSize, start).RelatedSel("ArticleType").All(&articles)
+	} else {
+		qs.Limit(pageSize, start).RelatedSel("ArticleType").Filter("ArticleType__TypeName", typeName).All(&articles)
+	}
+
+	//把数据存入redis中
+	if err != nil {
+		beego.Info("redis连接失败")
+		return
+	}
+	defer conn.Close()
+
+	//操作数据
+	conn.Do("set", "types", types)
 
 	//展示数据
+	this.Data["typeName"] = typeName
 	this.Data["pageIndex"] = pageIndex
 	this.Data["pageCount"] = int(pageCount)
 	this.Data["count"] = count
 	this.Data["articles"] = articles
-	this.TplName = "index.html"
+
+	//指定试图布局
+	//this.TplName = "index.html"
+	this.Layout = "layout.html"
 }
 
 //展示添加文章页面
@@ -139,6 +192,54 @@ func (this *ArticleController) HandleAddArticle() {
 	//4.返回页面
 	this.Redirect("/showArticleList", 302)
 
+}
+
+//展示文章详情页面
+func (this *ArticleController) ShowArticleDetail() {
+	id, er := this.GetInt("articleId")
+	if er != nil {
+		beego.Info("传递的连接错误")
+	}
+	o := orm.NewOrm()
+	var article models.Article
+	article.Id = id
+	o.Read(&article)
+
+	//Filter:过滤器，过滤条件为本表，Filter的第1个参数则不用指定表名，直接字段名即可
+	//One:由于指定id进行查询，返回的肯定只有1条数据，所有不用All()而用one()
+	o.QueryTable("Article").RelatedSel("ArticleType").Filter("Id", id).One(&article)
+
+	//修改阅读量
+	article.Acount += 1
+	o.Update(&article)
+
+	//多对多插入浏览记录
+	m2m := o.QueryM2M(&article, "Users")
+	userName := this.GetSession("userName")
+	if userName == nil {
+		this.Redirect("/login", 302)
+		return
+	}
+	var user models.User
+	user.Name = userName.(string)
+	o.Read(&user, "Name")
+
+	//多对多插入操作，Insert()不同
+	m2m.Add(&user, "Name")
+
+	//多对多查询
+	//o.LoadRelated(&article, "Users")
+	var users []models.User
+	//Distinct()：去除重复
+	o.QueryTable("User").Filter("Articles__Article__Id").Distinct().All(&users)
+
+	this.Data["users"] = users
+	this.Data["article"] = article
+	//this.TplName="content.html"
+	userLayout := this.GetSession("userName")
+	this.Data["userName"] = userLayout.(string)
+	//指定试图布局
+	this.Layout = "layout.html"
 }
 
 //显示编辑頁面
@@ -240,6 +341,22 @@ func (this *ArticleController) HandleAddType() {
 
 	//this.TplName="add.html"
 	this.Redirect("/addType", 302)
+}
+
+//删除文章类型
+func (this *ArticleController) DeleteType() {
+	id, err := this.GetInt("articleId")
+	if err != nil {
+		beego.Info("删除类型错误", err)
+		return
+	}
+
+	o := orm.NewOrm()
+	var article models.Article
+	article.Id = id
+	o.Delete(&article)
+
+	this.Redirect("/article/articleAddType", 302)
 }
 
 //封装上传文件函数

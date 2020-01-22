@@ -26,8 +26,8 @@ type Article struct {
 	Acontent string    `orm:"size(500)"`
 	Aimg     string    `orm:"size(100)"`
 
-	ArticleType *ArticleType `orm:"rel(fk)"`  //一对多：多的那一端，用rel(fk)标志位外键
-	Users       []*User      `orm:"rel(m2m)"` //多对多：用rel(m2m)标识
+	ArticleType *ArticleType `orm:"rel(fk);on_delete(set_null);null"` //一对多：多的那一端，用rel(fk)标志位外键。on_delete设置级联删除
+	Users       []*User      `orm:"rel(m2m)"`                         //多对多：用rel(m2m)标识
 }
 
 //类型表
