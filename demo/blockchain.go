@@ -1,16 +1,65 @@
 package main
 
+import (
+	"bolt"
+	"log"
+)
+
 //4.引入区块链
+//使用数据库代替数组
 type BlockChain struct {
-	blocks []*Block //定义一个区块链数组
+	//blocks []*Block //定义一个区块链数组
+	db *bolt.DB
+
+	tail []byte //存储最后一个区块的哈希
 }
+
+const blockChainDb = "blockChain.db"
+const blockBucket = "blockBucket"
 
 //5.定义一个区块链
 func NewBlockChain() *BlockChain {
-	genesisBlock := GenesisBlock() //创建一个创世块，并作为第一个区块添加到区块链中
-	return &BlockChain{
-		blocks: []*Block{genesisBlock},
+	//return &BlockChain{
+	//	blocks: []*Block{genesisBlock},
+	//}
+
+	//最后一个区块的哈希，从数据库中读出来的
+	var lastHash []byte
+
+	//1.打开数据库
+	db, err := bolt.Open(blockChainDb, 0600, nil)
+	defer db.Close()
+	if err != nil {
+		log.Panic("打开数据库失败,", err)
 	}
+
+	//将要操作数据库（改写）
+	db.Update(func(tx *bolt.Tx) error {
+		//2.找到抽屉bucket(如果没有，就创建)
+		bucket := tx.Bucket([]byte(blockBucket))
+		if bucket == nil {
+			//没有抽屉，我们需要创建一个
+			bucket, err = tx.CreateBucket([]byte(blockBucket))
+			if err != nil {
+				log.Panic("创建bucket(b1)失败")
+			}
+
+			genesisBlock := GenesisBlock() //创建一个创世块，并作为第一个区块添加到区块链中
+
+			//3.写数据
+			//hash作为key，block的字节流作为value
+			bucket.Put(genesisBlock.Hash, genesisBlock.toByte())
+			bucket.Put([]byte("lastHashKey"), []byte(genesisBlock.Hash))
+			lastHash = genesisBlock.Hash
+		} else {
+			lastHash = bucket.Get([]byte("lastHashKey"))
+		}
+
+		return nil
+	})
+
+	return &BlockChain{db, lastHash}
+
 }
 
 //定义一个创世区块
@@ -20,12 +69,14 @@ func GenesisBlock() *Block {
 
 //6.添加区块
 func (bc *BlockChain) AddBlock(data string) {
-	//获取前一区块的哈希值
-	preBlock:=bc.blocks[len(bc.blocks)-1]
-	preHash:=preBlock.Hash
+	/*
+		//获取前一区块的哈希值
+		preBlock:=bc.blocks[len(bc.blocks)-1]
+		preHash:=preBlock.Hash
 
-	//a.创建新的区块
-	newBlock:=NewBlock(data,preHash)
-	//b.添加到区块链数组中
-	bc.blocks=append(bc.blocks, newBlock)
+		//a.创建新的区块
+		newBlock:=NewBlock(data,preHash)
+		//b.添加到区块链数组中
+		bc.blocks=append(bc.blocks, newBlock)
+	*/
 }

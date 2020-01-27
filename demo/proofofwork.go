@@ -21,12 +21,11 @@ func NewProofOfWork(block *Block) *ProofOfWork {
 		block: block,
 	}
 	//指定难度值，现在是一个string类型，需要进行转换
-	targetStr := "0000100000000000000000000000000000000000000000000"
+	targetStr := "0000f00000000000000000000000000000000000000000000000000000000000"
 	//引入的辅助变量，目的是将上面的难度值转成big.Int
 	tmpInt := big.Int{}
 	//将难度值赋值给big.Int，指定16进制的格式
 	tmpInt.SetString(targetStr, 16)
-
 	pow.target = &tmpInt
 	return &pow
 }
@@ -43,6 +42,7 @@ func (pow *ProofOfWork) Run() ([]byte, uint64) {
 	block := pow.block
 	var hash [32]byte
 
+	fmt.Println("开始挖矿……")
 	for {
 		//1.拼装数据（区块的数据，还有不断变化的随机数）
 		tmp := [][]byte{
@@ -70,6 +70,7 @@ func (pow *ProofOfWork) Run() ([]byte, uint64) {
 		} else {
 			//b.没找到，继续找，随机数加1
 			nonce++
+			fmt.Println("未找到：", nonce)
 		}
 	}
 

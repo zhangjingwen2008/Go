@@ -14,3 +14,4 @@ gen
 bin/
 pkg/
 /src/protobuf/
+/blockChain.db
