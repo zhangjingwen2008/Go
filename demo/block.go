@@ -2,8 +2,8 @@ package main
 
 import (
 	"bytes"
-	"crypto/sha256"
 	"encoding/binary"
+	"encoding/gob"
 	"log"
 	"time"
 )
@@ -53,11 +53,32 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 	return &block
 }
 
+func (block *Block) Serialize() []byte {
+	var buffer bytes.Buffer
+	encoder:=gob.NewEncoder(&buffer)
+	err:=encoder.Encode(&block)
+	if err!=nil{
+		log.Panic("编码失败")
+	}
+
+	return buffer.Bytes()
+}
+
+func Deserialize(data []byte) Block {
+	 decoder:=gob.NewDecoder(bytes.NewReader(data))
+	var block Block
+	 err:=decoder.Decode(&block)
+	 if err!=nil{
+	 	log.Panic("解码出错！")
+	 }
+	 return block
+}
+
+/*
 //3.生成哈希
 func (block *Block) SetHash() {
 	//TODO
 	//1.拼装数据
-	/*
 		var blockInfo []byte
 		blockInfo = append(blockInfo, Uint64ToByte(block.Version)...)
 		blockInfo = append(blockInfo, block.PrevHash...)
@@ -66,7 +87,6 @@ func (block *Block) SetHash() {
 		blockInfo = append(blockInfo, Uint64ToByte(block.Difficulty)...)
 		blockInfo = append(blockInfo, Uint64ToByte(block.Nonce)...)
 		blockInfo = append(blockInfo, block.Data...)
-	*/
 	tmp := [][]byte{
 		Uint64ToByte(block.Version),
 		block.PrevHash,
@@ -84,6 +104,7 @@ func (block *Block) SetHash() {
 	hash := sha256.Sum256(blockInfo)
 	block.Hash = hash[:]
 }
+*/
 
 func (block *Block) toByte() []byte {
 	//TODO
