@@ -82,4 +82,12 @@ package main
 
 	从远程分支上拉取代码到本地所属分支
 		- git pull origin [分支名称]
+
+	更新一下本地master，保持与远程同步
+		- git checkout master
+		- git pull
+		- git checkout Liangzai		//也可以其名为在后面加dev/bugfix-9803等等
+		- git merge master 			//把自己的开发分支与master合并，可能会有冲突，解决冲突
+		- git push origin Liangzai:Liangzai		//把最终的分支提交到远程仓库
+		- 把你的分支名字告诉总监，让他合并到master
 */
