@@ -2,7 +2,6 @@ package main
 
 import (
 	"bolt"
-	"fmt"
 	"log"
 )
 
@@ -50,16 +49,16 @@ func NewBlockChain() *BlockChain {
 			//3.写数据
 			//hash作为key，block的字节流作为value
 			bucket.Put(genesisBlock.Hash, genesisBlock.Serialize())
-			bucket.Put([]byte("lastHashKey"), []byte(genesisBlock.Hash))
+			bucket.Put([]byte("LastHashKey"), []byte(genesisBlock.Hash))
 			lastHash = genesisBlock.Hash
 
 			//测试
-			blockBytes:=bucket.Get(genesisBlock.Hash)
-			block:=Deserialize(blockBytes)
-			fmt.Printf("block info:%s",block)
+			//blockBytes:=bucket.Get(genesisBlock.Hash)
+			//block:=Deserialize(blockBytes)
+			//fmt.Printf("block info:%s",block)
 
 		} else {
-			lastHash = bucket.Get([]byte("lastHashKey"))
+			lastHash = bucket.Get([]byte("LastHashKey"))
 		}
 
 		return nil
@@ -74,16 +73,29 @@ func GenesisBlock() *Block {
 	return NewBlock("这是创世区块哇", []byte{})
 }
 
-//6.添加区块
+//5.添加区块
 func (bc *BlockChain) AddBlock(data string) {
-	/*
-		//获取前一区块的哈希值
-		preBlock:=bc.blocks[len(bc.blocks)-1]
-		preHash:=preBlock.Hash
+	//获取前一区块的哈希值
+	db:=bc.db				//区块链数据库
+	lastHash:=bc.tail		//最后一个区块的Hash
 
+	db.Update(func(tx *bolt.Tx) error {
+		//完成数据添加
+		bucket:=tx.Bucket([]byte(blockBucket))
+		if bucket==nil{
+			log.Panic("bucket 不应为空，请检查！")
+		}
 		//a.创建新的区块
-		newBlock:=NewBlock(data,preHash)
+		block:=NewBlock(data,lastHash)
+
 		//b.添加到区块链数组中
-		bc.blocks=append(bc.blocks, newBlock)
-	*/
+		bucket.Put(block.Hash,block.Serialize())
+		bucket.Put([]byte("LastHashKey"),block.Hash)
+		lastHash=block.Hash
+		//还需更新一下内存中的区块链，指的是把最后的tail更新一下
+		bc.tail=lastHash
+
+		return nil
+	})
+
 }

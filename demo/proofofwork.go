@@ -70,7 +70,6 @@ func (pow *ProofOfWork) Run() ([]byte, uint64) {
 		} else {
 			//b.没找到，继续找，随机数加1
 			nonce++
-			fmt.Println("未找到：", nonce)
 		}
 	}
 
