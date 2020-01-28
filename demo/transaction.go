@@ -7,7 +7,7 @@ import (
 	"log"
 )
 
-const reward =12.5
+const reward = 12.5
 
 //1.定义交易结构
 type Transaction struct {
@@ -25,39 +25,53 @@ type TXInput struct {
 
 //定义交易输出
 type TXOutput struct {
-	Value float64			//转账金额
-	PubKeyHash string		//锁定脚本，我们用地址模拟
+	Value      float64 //转账金额
+	PubKeyHash string  //锁定脚本，我们用地址模拟
 }
 
 //设置交易ID
 func (tx *Transaction) SetHash() {
 	var buffer bytes.Buffer
-	encoder:=gob.NewEncoder(&buffer)
-	err:= encoder.Encode(tx)
-	if err!=nil{
+	encoder := gob.NewEncoder(&buffer)
+	err := encoder.Encode(tx)
+	if err != nil {
 		log.Panic(err)
 	}
-	data:= buffer.Bytes()
-	hash:= sha256.Sum256(data)
-	tx.TXID=hash[:]
+	data := buffer.Bytes()
+	hash := sha256.Sum256(data)
+	tx.TXID = hash[:]
+}
+
+//实现一个函数，判断当前的交易是否为挖矿交易
+func (tx *Transaction) IsCoinbase() bool {
+	//1.交易input只有一个
+	if len(tx.TXInput) == 1 {
+		input := tx.TXInput[0]
+		//2.交易id为空
+		//3.交易的index为-1
+		if bytes.Equal(tx.TXInput[0].TXid, []byte{}) || input.index != -1 {
+			return false
+		}
+	}
+	return true
 }
 
 //2.提供创建交易方法（挖矿交易）
-func NewCoinbaseTX(address string,data string) *Transaction {
+func NewCoinbaseTX(address string, data string) *Transaction {
 	//挖矿交易的特点
 	//1.只有1个input
 	//2.无需引用交易ID
 	//3.无需引用index
-	input:=TXInput{						//矿工由于挖矿时无需指定签名，所以这个sig字段可以由矿工自由填写数据，一般是填矿池的名字
+	input := TXInput{ //矿工由于挖矿时无需指定签名，所以这个sig字段可以由矿工自由填写数据，一般是填矿池的名字
 		TXid:  []byte{},
 		index: -1,
 		Sig:   data,
 	}
-	output:=TXOutput{
+	output := TXOutput{
 		Value:      reward,
 		PubKeyHash: address,
 	}
-	tx:=Transaction{					//对于挖矿交易来说，只有一个input和一个output
+	tx := Transaction{ //对于挖矿交易来说，只有一个input和一个output
 		TXID:     []byte{},
 		TXInput:  []TXInput{input},
 		TXOutput: []TXOutput{output},
@@ -65,7 +79,6 @@ func NewCoinbaseTX(address string,data string) *Transaction {
 	tx.SetHash()
 	return &tx
 }
-
 
 //3.创建挖矿交易
 //4.根据交易调整程序

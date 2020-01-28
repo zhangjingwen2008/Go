@@ -37,7 +37,7 @@ func (cli *CLI) GetBalance(address string)  {
 	utxos:=cli.bc.FindUTXOs(address)
 	total:=0.0
 	for _,utxo:=range utxos{
-		total+=utxo.value
+		total+=utxo.Value
 	}
 	fmt.Println(address,"的余额为：",total)
 }
