@@ -125,7 +125,7 @@ func Uint64ToByte(num uint64) []byte {
 }
 
 //模拟MerkleRoot，只是对交易的数据做简单的拼接
-func (block *Block) MakeMerkleRoot() []byte {
+func (bc *Block) MakeMerkleRoot() []byte {
 	//TODO
 	return []byte{}
 }
