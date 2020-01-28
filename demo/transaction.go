@@ -25,7 +25,7 @@ type TXInput struct {
 
 //定义交易输出
 type TXOutput struct {
-	value float64			//转账金额
+	Value float64			//转账金额
 	PubKeyHash string		//锁定脚本，我们用地址模拟
 }
 
@@ -54,7 +54,7 @@ func NewCoinbaseTX(address string,data string) *Transaction {
 		Sig:   data,
 	}
 	output:=TXOutput{
-		value:      reward,
+		Value:      reward,
 		PubKeyHash: address,
 	}
 	tx:=Transaction{					//对于挖矿交易来说，只有一个input和一个output

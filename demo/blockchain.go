@@ -117,9 +117,23 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 		//2.遍历交易
 		for _, tx := range block.Transactions {
 			fmt.Println("current txid:", tx.TXID)
+
+		OUTPUT:
 			//3.遍历output, 找到和自己相关的UTXO（在添加output之前检查一下是否已经消耗过）
 			for i, output := range tx.TXOutput {
 				fmt.Println("current index:", i)
+				//在这里做一个过滤，将所有消耗过的output和当前的所即将添加的output对比一下
+				//如果相同，则跳过，否则添加
+				//拖过当前的交易id存在于我们已经表示的map，那么说明这个交易里面有消耗过的output
+				if spentOutputs[string(tx.TXID)] != nil {
+					for _, j := range spentOutputs[string(tx.TXID)] {
+						if int64(i) == j {
+							//当前准备添加output已经消耗过了，无需添加
+							continue OUTPUT
+						}
+					}
+				}
+
 				if output.PubKeyHash == address { //这个output和我们目标地址相同，满足条件，加到返回UTXO数组中
 					UTXO = append(UTXO, output)
 				}
