@@ -47,9 +47,6 @@ func (cli *CLI) Run() {
 			fmt.Println("无效命令")
 			fmt.Println(Usage)
 	}
-
-
-	//3.执行相应动作
 }
 
 
