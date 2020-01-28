@@ -1,5 +1,12 @@
 package main
 
+import (
+	"bytes"
+	"crypto/sha256"
+	"encoding/gob"
+	"log"
+)
+
 //1.定义交易结构
 type Transaction struct {
 	TXID     []byte     //交易ID
@@ -18,6 +25,19 @@ type TXInput struct {
 type TXOutput struct {
 	value float64			//转账金额
 	PubKeyHash string		//锁定脚本，我们用地址模拟
+}
+
+//设置交易ID
+func (tx *Transaction) SetHash() {
+	var buffer bytes.Buffer
+	encoder:=gob.NewEncoder(&buffer)
+	err:= encoder.Encode(tx)
+	if err!=nil{
+		log.Panic(err)
+	}
+	data:= buffer.Bytes()
+	hash:= sha256.Sum256(data)
+	tx.TXID=hash[:]
 }
 
 //2.提供创建交易方法
