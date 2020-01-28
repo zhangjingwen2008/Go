@@ -63,6 +63,7 @@ func NewCoinbaseTX(address string,data string) *Transaction {
 		TXOutput: []TXOutput{output},
 	}
 	tx.SetHash()
+	return &tx
 }
 
 

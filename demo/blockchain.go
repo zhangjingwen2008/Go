@@ -18,7 +18,7 @@ const blockChainDb = "blockChain.db"
 const blockBucket = "blockBucket"
 
 //5.定义一个区块链
-func NewBlockChain() *BlockChain {
+func NewBlockChain(address string) *BlockChain {
 	//return &BlockChain{
 	//	blocks: []*Block{genesisBlock},
 	//}
@@ -44,7 +44,7 @@ func NewBlockChain() *BlockChain {
 				log.Panic("创建bucket(b1)失败")
 			}
 
-			genesisBlock := GenesisBlock() //创建一个创世块，并作为第一个区块添加到区块链中
+			genesisBlock := GenesisBlock(address) //创建一个创世块，并作为第一个区块添加到区块链中
 
 			//3.写数据
 			//hash作为key，block的字节流作为value
@@ -69,33 +69,41 @@ func NewBlockChain() *BlockChain {
 }
 
 //定义一个创世区块
-func GenesisBlock() *Block {
-	return NewBlock("这是创世区块哇", []byte{})
+func GenesisBlock(address string) *Block {
+	coinbase := NewCoinbaseTX(address, "这是创世区块哇")
+	return NewBlock([]*Transaction{coinbase}, []byte{})
 }
 
 //5.添加区块
-func (bc *BlockChain) AddBlock(data string) {
+func (bc *BlockChain) AddBlock(txs []*Transaction) {
 	//获取前一区块的哈希值
-	db:=bc.db				//区块链数据库
-	lastHash:=bc.tail		//最后一个区块的Hash
+	db := bc.db         //区块链数据库
+	lastHash := bc.tail //最后一个区块的Hash
 
 	db.Update(func(tx *bolt.Tx) error {
 		//完成数据添加
-		bucket:=tx.Bucket([]byte(blockBucket))
-		if bucket==nil{
+		bucket := tx.Bucket([]byte(blockBucket))
+		if bucket == nil {
 			log.Panic("bucket 不应为空，请检查！")
 		}
 		//a.创建新的区块
-		block:=NewBlock(data,lastHash)
+		block := NewBlock(txs, lastHash)
 
 		//b.添加到区块链数组中
-		bucket.Put(block.Hash,block.Serialize())
-		bucket.Put([]byte("LastHashKey"),block.Hash)
-		lastHash=block.Hash
+		bucket.Put(block.Hash, block.Serialize())
+		bucket.Put([]byte("LastHashKey"), block.Hash)
+		lastHash = block.Hash
 		//还需更新一下内存中的区块链，指的是把最后的tail更新一下
-		bc.tail=lastHash
+		bc.tail = lastHash
 
 		return nil
 	})
 
+}
+
+func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
+	var UTXO []TXOutput
+	//TODO
+
+	return UTXO
 }

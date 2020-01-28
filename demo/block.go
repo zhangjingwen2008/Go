@@ -26,21 +26,26 @@ type Block struct {
 	//a.当前区块哈希
 	Hash []byte
 	//b.数据
-	Data []byte
+	//Data []byte
+	//真实的交易数组
+	Transactions []*Transaction
 }
 
 //2.创建区块
-func NewBlock(data string, prevBlockHash []byte) *Block {
+func NewBlock(txs []*Transaction, prevBlockHash []byte) *Block {
 	block := Block{
-		Version:    00,
-		PrevHash:   prevBlockHash,
-		MerkleRoot: []byte{},
-		TimeStamp:  uint64(time.Now().Unix()),
-		Difficulty: 0,
-		Nonce:      0,
-		Hash:       []byte{},
-		Data:       []byte(data),
+		Version:      00,
+		PrevHash:     prevBlockHash,
+		MerkleRoot:   []byte{},
+		TimeStamp:    uint64(time.Now().Unix()),
+		Difficulty:   0,
+		Nonce:        0,
+		Hash:         []byte{},
+		Transactions: txs,
 	}
+
+	block.MerkleRoot=block.MakeMerkleRoot()
+
 	//block.SetHash()
 	//创建一个pow对象
 	pow := NewProofOfWork(&block)
@@ -55,9 +60,9 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 
 func (block *Block) Serialize() []byte {
 	var buffer bytes.Buffer
-	encoder:=gob.NewEncoder(&buffer)
-	err:=encoder.Encode(&block)
-	if err!=nil{
+	encoder := gob.NewEncoder(&buffer)
+	err := encoder.Encode(&block)
+	if err != nil {
 		log.Panic("编码失败")
 	}
 
@@ -65,19 +70,18 @@ func (block *Block) Serialize() []byte {
 }
 
 func Deserialize(data []byte) Block {
-	 decoder:=gob.NewDecoder(bytes.NewReader(data))
+	decoder := gob.NewDecoder(bytes.NewReader(data))
 	var block Block
-	 err:=decoder.Decode(&block)
-	 if err!=nil{
-	 	log.Panic("解码出错！")
-	 }
-	 return block
+	err := decoder.Decode(&block)
+	if err != nil {
+		log.Panic("解码出错！")
+	}
+	return block
 }
 
 /*
 //3.生成哈希
 func (block *Block) SetHash() {
-	//TODO
 	//1.拼装数据
 		var blockInfo []byte
 		blockInfo = append(blockInfo, Uint64ToByte(block.Version)...)
@@ -107,7 +111,6 @@ func (block *Block) SetHash() {
 */
 
 func (block *Block) toByte() []byte {
-	//TODO
 	return []byte{}
 }
 
@@ -119,4 +122,10 @@ func Uint64ToByte(num uint64) []byte {
 		log.Panic(err)
 	}
 	return buffer.Bytes()
+}
+
+//模拟MerkleRoot，只是对交易的数据做简单的拼接
+func (block *Block) MakeMerkleRoot() []byte {
+	//TODO
+	return []byte{}
 }
