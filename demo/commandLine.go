@@ -18,7 +18,7 @@ func (cli *CLI) PrintBlockChain() {
 		fmt.Printf("版本号：%d\n", block.Version)
 		fmt.Printf("前区块哈希值：%x\n", block.PrevHash)
 		fmt.Printf("MerkelRoot：%x\n", block.MerkleRoot)
-		timeFormat:=time.Unix(int64(block.TimeStamp),0).Format("2006-01-02 15:04:05")
+		timeFormat := time.Unix(int64(block.TimeStamp), 0).Format("2006-01-02 15:04:05")
 		fmt.Printf("时间戳：%s\n", timeFormat)
 		fmt.Printf("难度值：%d\n", block.Difficulty)
 		fmt.Printf("Nonce：%d\n", block.Nonce)
@@ -59,11 +59,15 @@ func (cli *CLI) Send(from, to string, amount float64, miner, data string) {
 	fmt.Println("转账成功")
 }
 
-func (cli *CLI) NewWallet()  {
+func (cli *CLI) NewWallet() {
+	ws := NewWallets()
+	address := ws.CreateWallet()
+	fmt.Println("钱包地址：", address)
 	//wallet:=NewWallet()
 	//address:=wallet.NewAddress()
-	ws:=NewWallets()
-	for address:=range ws.WalletsMap{
-		fmt.Println("地址：",address)
-	}
+	//ws:=NewWallets()
+	//for address:=range ws.WalletsMap{
+	//	fmt.Println("地址：",address)
+	//}
+
 }
