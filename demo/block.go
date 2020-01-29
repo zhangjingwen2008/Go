@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/binary"
 	"encoding/gob"
 	"log"
@@ -44,7 +45,7 @@ func NewBlock(txs []*Transaction, prevBlockHash []byte) *Block {
 		Transactions: txs,
 	}
 
-	block.MerkleRoot=block.MakeMerkleRoot()
+	block.MerkleRoot=block. MakeMerkleRoot()
 
 	//block.SetHash()
 	//创建一个pow对象
@@ -126,6 +127,11 @@ func Uint64ToByte(num uint64) []byte {
 
 //模拟MerkleRoot，只是对交易的数据做简单的拼接
 func (bc *Block) MakeMerkleRoot() []byte {
-	//TODO
-	return []byte{}
+	var info []byte
+	//将交易的哈希值拼接起来，再整体做哈希处理
+	for _,tx:=range bc.Transactions{
+		info=append(info, tx.TXID...)
+	}
+	hash:=sha256.Sum256(info)
+	return hash[:]
 }

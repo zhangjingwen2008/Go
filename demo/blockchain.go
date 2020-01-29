@@ -128,7 +128,6 @@ func (bc *BlockChain) FindNeedUTXOs(from string, amount float64) (map[string][]u
 				if output.PubKeyHash == from { //这个output和我们目标地址相同，满足条件，加到返回UTXO数组中
 					//UTXO = append(UTXO, output)
 					//找到自己需要的最少UTXO
-					//TODO
 
 					if calc < amount {
 						//1.把UTXO加进来

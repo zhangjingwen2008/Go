@@ -12,7 +12,6 @@ type CLI struct {
 }
 
 const Usage = `
-	addBlock --data DATA		"add data to blockchain"
 	printChain					"print all blockchain data"
 	printChainR					"反向打印区块链"
 	getBalance --address ADDRESS	"获取指定地址的余额"
@@ -31,18 +30,6 @@ func (cli *CLI) Run() {
 	//2.分析命令
 	cmd:=args[1]
 	switch cmd {
-		case "addBlock":
-			//增加区块
-			fmt.Println("添加区块")
-			if len(args)!=4 && args[2]=="--data"{		//确保命令有效
-				//获取命令的数据
-				//a.获取数据
-				data:=args[3]
-				//b.使用bc添加区块AddBlock
-				cli.AddBlock(data)
-			}else{
-				fmt.Println("添加区块参数使用不当，请检查")
-			}
 		case "printChain":
 			//打印区块
 			fmt.Println("打印区块")

@@ -2,13 +2,10 @@ package main
 
 import (
 	"fmt"
+	"time"
 )
 
-func (cli *CLI) AddBlock(data string) {
-	//cli.bc.AddBlock(data)		TODO
-	fmt.Println("添加区块成功！")
-}
-
+//正向打印
 func (cli *CLI) PrintBlockChain() {
 	bc := cli.bc
 	//创建迭代器
@@ -21,7 +18,8 @@ func (cli *CLI) PrintBlockChain() {
 		fmt.Printf("版本号：%d\n", block.Version)
 		fmt.Printf("前区块哈希值：%x\n", block.PrevHash)
 		fmt.Printf("MerkelRoot：%x\n", block.MerkleRoot)
-		fmt.Printf("时间戳：%d\n", block.TimeStamp)
+		timeFormat:=time.Unix(int64(block.TimeStamp),0).Format("2006-01-02 15:04:05")
+		fmt.Printf("时间戳：%s\n", timeFormat)
 		fmt.Printf("难度值：%d\n", block.Difficulty)
 		fmt.Printf("Nonce：%d\n", block.Nonce)
 		fmt.Printf("区块数据：%s\n\n", block.Transactions[0].TXInput[0].Sig)
@@ -49,7 +47,6 @@ func (cli *CLI) Send(from, to string, amount float64, miner, data string) {
 	fmt.Println("mincer:", miner)
 	fmt.Println("data:", data)
 
-	//具体逻辑，TODO
 	//1.创建挖矿交易
 	coinbase := NewCoinbaseTX(miner, data)
 	//2.创建一个普通交易
