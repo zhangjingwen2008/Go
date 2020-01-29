@@ -124,7 +124,7 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 				fmt.Println("current index:", i)
 				//在这里做一个过滤，将所有消耗过的output和当前的所即将添加的output对比一下
 				//如果相同，则跳过，否则添加
-				//拖过当前的交易id存在于我们已经表示的map，那么说明这个交易里面有消耗过的output
+				//如果当前的交易id存在于我们已经表示的map，那么说明这个交易里面有消耗过的output
 				if spentOutputs[string(tx.TXID)] != nil {
 					for _, j := range spentOutputs[string(tx.TXID)] {
 						if int64(i) == j {
@@ -140,17 +140,17 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 			}
 
 			//如果当前交易是挖矿交易的话，那么不做遍历，直接跳过
-			if !tx.IsCoinbase(){
+			if !tx.IsCoinbase() {
 				//4.遍历input，找到自己花费过的UTXO的集合（把自己消耗过的标示出来）
 				for _, input := range tx.TXInput {
 					//判断一下当前这个input和目标（李四）是否一致，如果相同，说明这个是李四消耗过的output，就加进来
 					if input.Sig == address {
 						//indexArray := spentOutputs[string(input.TXid)]
 						//indexArray = append(indexArray, input.index)
-						spentOutputs[string(input.TXid)]=append(spentOutputs[string(input.TXid)],input.index)
+						spentOutputs[string(input.TXid)] = append(spentOutputs[string(input.TXid)], input.index)
 					}
 				}
-			}else{
+			} else {
 				fmt.Println("这是coinBase，不做input输出")
 			}
 
@@ -163,4 +163,91 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 	}
 
 	return UTXO
+}
+
+func (bc *BlockChain) FindNeedUTXOs(from string, amount float64) (map[string][]uint64, float64) {
+	utxos := make(map[string][]uint64)       //找到的合理的utxos集合
+	spentOutputs := make(map[string][]int64) //标识已经消耗过的UTXO
+	var calc float64                         //找到的utxos里面包含的钱的总数
+
+	//创建迭代器
+	it := bc.NewIterator()
+	for {
+		//1.遍历区块
+		block := it.Next()
+
+		//2.遍历交易
+		for _, tx := range block.Transactions {
+			fmt.Println("current txid:", tx.TXID)
+
+		OUTPUT:
+			//3.遍历output, 找到和自己相关的UTXO（在添加output之前检查一下是否已经消耗过）
+			for i, output := range tx.TXOutput {
+				fmt.Println("current index:", i)
+				//在这里做一个过滤，将所有消耗过的output和当前的所即将添加的output对比一下
+				//如果相同，则跳过，否则添加
+				//如果当前的交易id存在于我们已经表示的map，那么说明这个交易里面有消耗过的output
+				if spentOutputs[string(tx.TXID)] != nil {
+					for _, j := range spentOutputs[string(tx.TXID)] {
+						if int64(i) == j {
+							//当前准备添加output已经消耗过了，无需添加
+							continue OUTPUT
+						}
+					}
+				}
+
+				if output.PubKeyHash == from { //这个output和我们目标地址相同，满足条件，加到返回UTXO数组中
+					//UTXO = append(UTXO, output)
+					//找到自己需要的最少UTXO
+					//TODO
+
+					if calc < amount {
+						//1.把UTXO加进来
+						utxos[string(tx.TXID)] = append(utxos[string(tx.TXID)], uint64(i))
+						//2.统计当前UTXO总额
+						calc += output.Value
+
+						//加完之后若满足条件
+						//3.比较是否满足转账需求
+						//a.满足，直接返货 utxos，calc
+						//b.不满足，继续统计
+						if calc >= amount {
+							//break
+							fmt.Println("找到了满足的金额：",calc)
+							return utxos, calc
+						}
+
+					}else{
+						fmt.Println("不满足转账金额，当前总额：",calc," 目标金额：",amount)
+					}
+
+				} else {
+
+				}
+			}
+
+			//如果当前交易是挖矿交易的话，那么不做遍历，直接跳过
+			if !tx.IsCoinbase() {
+				//4.遍历input，找到自己花费过的UTXO的集合（把自己消耗过的标示出来）
+				for _, input := range tx.TXInput {
+					//判断一下当前这个input和目标（李四）是否一致，如果相同，说明这个是李四消耗过的output，就加进来
+					if input.Sig == from {
+						//indexArray := spentOutputs[string(input.TXid)]
+						//indexArray = append(indexArray, input.index)
+						spentOutputs[string(input.TXid)] = append(spentOutputs[string(input.TXid)], input.index)
+					}
+				}
+			} else {
+				fmt.Println("这是coinBase，不做input输出")
+			}
+
+		}
+
+		if len(block.PrevHash) == 0 {
+			fmt.Println("区块遍历完成退出")
+			break
+		}
+	}
+
+	return utxos, calc
 }
