@@ -40,7 +40,26 @@ func NewWallet() *Wallet {
 //生成地址
 func (w *Wallet) NewAddress() string {
 	pubKey := w.PubKey
-	hash := sha256.Sum256(pubKey)
+
+	rip160HashValue:=HashPubKey(pubKey)
+
+	version := byte(00)
+	payload := append([]byte{version}, rip160HashValue...)
+
+	//CheckSum
+	checkCode:=CheckSum(payload)
+
+	//25字节数据
+	payload = append(payload, checkCode...)
+
+	//go语言中有一个叫btcd库，是go语言实现比特币全节点源码
+	address := base58.Encode(payload)
+
+	return address
+}
+
+func HashPubKey(data []byte) []byte {
+	hash := sha256.Sum256(data)
 
 	//编码器
 	rip160hasher := crypto.RIPEMD160.New()
@@ -51,21 +70,17 @@ func (w *Wallet) NewAddress() string {
 
 	//返回rip160的哈希结果
 	rip160HashValue := rip160hasher.Sum(nil)
-	version := byte(00)
-	payload := append([]byte{version}, rip160HashValue...)
 
+	return rip160HashValue
+}
+
+func CheckSum(data []byte) []byte {
 	//checksum
-	hash1 := sha256.Sum256(payload)
+	hash1 := sha256.Sum256(data)
 	hash2 := sha256.Sum256(hash1[:])
 
 	//前4字节校验码
 	checkCode := hash2[:4]
 
-	//25字节数据
-	payload = append(payload, checkCode...)
-
-	//go语言中有一个叫btcd库，是go语言实现比特币全节点源码
-	address := base58.Encode(payload)
-
-	return address
+	return checkCode
 }
