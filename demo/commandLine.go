@@ -6,7 +6,7 @@ import (
 )
 
 //正向打印
-func (cli *CLI) PrintBlockChain() {
+func (cli *CLI) PrintBChain() {
 	bc := cli.bc
 	//创建迭代器
 	it := bc.NewIterator()
