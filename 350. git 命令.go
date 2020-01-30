@@ -90,4 +90,10 @@ package main
 		- git merge master 			//把自己的开发分支与master合并，可能会有冲突，解决冲突
 		- git push origin Liangzai:Liangzai		//把最终的分支提交到远程仓库
 		- 把你的分支名字告诉总监，让他合并到master
+
+	合并分支
+		- git checkout master			//先切换到要合并的主分支
+		- git pull						//合并前先更新到最新版本，防止冲突
+		- git merge LiangzaiFenzhi		//合并指定的分支
+		- git push						//合并完成后，push上传
 */
