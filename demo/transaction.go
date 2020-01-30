@@ -1,7 +1,6 @@
 package main
 
 import (
-	"base58"
 	"bytes"
 	"crypto/sha256"
 	"encoding/gob"
@@ -37,12 +36,7 @@ type TXOutput struct {
 //由于现在存储的字段是地址的公钥哈希，所以无法直接创建TXOutput
 //为了能够得到公钥哈希，需要写一个Lock函数处理一下
 func (output *TXOutput) Lock(address string)  {
-	//1.解码
-	addressByte:=base58.Decode(address)		//25字节
-	len:=len(addressByte)
-	//2.截取出公钥哈希：去除Version（1字节），去除校验码（4字节）
-	pubKeyHash:=addressByte[1:len-4]
-	output.PubKeyHash=pubKeyHash			//真正的锁定动作
+	output.PubKeyHash=GetPubKeyFromAddress(address)			//真正的锁定动作
 }
 
 //给TXOutput提供一个创建的方法，否则无法调用Lock
@@ -115,7 +109,7 @@ func NewTransaction(from, to string, amount float64, bc *BlockChain) *Transactio
 	pubKey:=wallet.PubKey
 	//privateKey:=wallet.Private
 
-	pubKeyHash:=HashPubKey(pubKey)
+	pubKeyHash:=HashPubKey(pubKey)		//传递公钥的哈希，而不是传递地址
 
 	//1.找到最合理的UTXO集合 map[string][]uint64
 	utxos, resValue := bc.FindNeedUTXOs(pubKeyHash, amount)

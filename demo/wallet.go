@@ -2,6 +2,7 @@ package main
 
 import (
 	"base58"
+	"bytes"
 	"crypto"
 	"crypto/ecdsa"
 	"crypto/elliptic"
@@ -41,13 +42,13 @@ func NewWallet() *Wallet {
 func (w *Wallet) NewAddress() string {
 	pubKey := w.PubKey
 
-	rip160HashValue:=HashPubKey(pubKey)
+	rip160HashValue := HashPubKey(pubKey)
 
 	version := byte(00)
 	payload := append([]byte{version}, rip160HashValue...)
 
 	//CheckSum
-	checkCode:=CheckSum(payload)
+	checkCode := CheckSum(payload)
 
 	//25字节数据
 	payload = append(payload, checkCode...)
@@ -83,4 +84,22 @@ func CheckSum(data []byte) []byte {
 	checkCode := hash2[:4]
 
 	return checkCode
+}
+
+func IsValidAddress(address string) bool {
+	//1.解码
+	addressByte := base58.Decode(address)
+	if len(addressByte) < 4 {
+		return false
+	}
+
+	//2.取数据
+	payload := addressByte[:len(addressByte)-4]
+	checksum1 := addressByte[len(addressByte)-4:]
+
+	//3.做CheckSum函数
+	checksum2 := CheckSum(payload)
+
+	//4.比较
+	return bytes.Equal(checksum1, checksum2)
 }

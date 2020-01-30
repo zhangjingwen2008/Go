@@ -2,6 +2,7 @@ package main
 
 import (
 	"bolt"
+	"bytes"
 	"fmt"
 	"log"
 )
@@ -102,13 +103,13 @@ func (bc *BlockChain) AddBlock(txs []*Transaction) {
 
 }
 
-func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
+func (bc *BlockChain) FindUTXOs(pubKeyHash []byte) []TXOutput {
 	var UTXO []TXOutput
 
-	txs := bc.FindUTXOTransactions(address)
+	txs := bc.FindUTXOTransactions(pubKeyHash)
 	for _, tx := range txs {
 		for _, output := range tx.TXOutput {
-			if address == output.PubKeyHash {
+			if bytes.Equal(pubKeyHash,output.PubKeyHash){
 				UTXO = append(UTXO, output)
 			}
 		}
@@ -117,15 +118,16 @@ func (bc *BlockChain) FindUTXOs(address string) []TXOutput {
 }
 
 
-func (bc *BlockChain) FindNeedUTXOs(from string, amount float64) (map[string][]uint64, float64) {
+func (bc *BlockChain) FindNeedUTXOs(senderPubKeyHash []byte, amount float64) (map[string][]uint64, float64) {
 	utxos := make(map[string][]uint64) //找到的合理的utxos集合
 	var calc float64                   //找到的utxos里面包含的钱的总数
 
-	txs := bc.FindUTXOTransactions(from)
+	txs := bc.FindUTXOTransactions(senderPubKeyHash)
+
 	for _, tx := range txs {
 		for i, output := range tx.TXOutput {
-			if from == output.PubKeyHash {
-				if output.PubKeyHash == from { //这个output和我们目标地址相同，满足条件，加到返回UTXO数组中
+			if bytes.Equal(senderPubKeyHash,output.PubKeyHash) {		//两个[]byte的比较
+				//这个output和我们目标地址相同，满足条件，加到返回UTXO数组中
 					//UTXO = append(UTXO, output)
 					//找到自己需要的最少UTXO
 
@@ -149,9 +151,6 @@ func (bc *BlockChain) FindNeedUTXOs(from string, amount float64) (map[string][]u
 						fmt.Println("不满足转账金额，当前总额：", calc, " 目标金额：", amount)
 					}
 
-				} else {
-
-				}
 			}
 		}
 	}
@@ -159,7 +158,7 @@ func (bc *BlockChain) FindNeedUTXOs(from string, amount float64) (map[string][]u
 	return utxos, calc
 }
 
-func (bc *BlockChain) FindUTXOTransactions(address string) []*Transaction {
+func (bc *BlockChain) FindUTXOTransactions(senderPubKeyHash []byte) []*Transaction {
 	var txs []*Transaction //存储所有包含utxo交易集合
 	//我们定义一个map来保存消费过的output，key是这个output的交易id，value是这个交易中索引的数组
 	//map[交易id][]int64
@@ -191,7 +190,7 @@ func (bc *BlockChain) FindUTXOTransactions(address string) []*Transaction {
 					}
 				}
 
-				if output.PubKeyHash == address { //这个output和我们目标地址相同，满足条件，加到返回UTXO数组中
+				if bytes.Equal(output.PubKeyHash,senderPubKeyHash) { //这个output和我们目标地址相同，满足条件，加到返回UTXO数组中
 					txs = append(txs, tx) //返回所有包含我的utxo的交易的集合
 				}
 			}
@@ -201,7 +200,8 @@ func (bc *BlockChain) FindUTXOTransactions(address string) []*Transaction {
 				//4.遍历input，找到自己花费过的UTXO的集合（把自己消耗过的标示出来）
 				for _, input := range tx.TXInput {
 					//判断一下当前这个input和目标（李四）是否一致，如果相同，说明这个是李四消耗过的output，就加进来
-					if input.Sig == address {
+					pubKeyHash:=HashPubKey(input.PubKey)
+					if bytes.Equal(pubKeyHash,senderPubKeyHash) {
 						//indexArray := spentOutputs[string(input.TXid)]
 						//indexArray = append(indexArray, input.index)
 						spentOutputs[string(input.TXid)] = append(spentOutputs[string(input.TXid)], input.index)

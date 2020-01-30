@@ -1,6 +1,7 @@
 package main
 
 import (
+	"base58"
 	"bytes"
 	"crypto/elliptic"
 	"encoding/gob"
@@ -54,7 +55,7 @@ func (ws *Wallets) loadFile() {
 	//读取之前，先确认文件是否存在，若不存在，直接退出
 	_, err := os.Stat(walletFile)
 	if os.IsNotExist(err) {
-		ws.WalletsMap = make(map[string]*Wallet) 
+		ws.WalletsMap = make(map[string]*Wallet)
 		return
 	}
 
@@ -84,4 +85,13 @@ func (ws *Wallets) ListAllAddresses() []string {
 	}
 	return addresses
 
+}
+
+//通过地址返回公钥哈希
+func GetPubKeyFromAddress(address string) []byte {
+	addressByte:=base58.Decode(address)
+	len:=len(addressByte)
+	pubKeyHash:=addressByte[1:len-4]
+
+	return pubKeyHash
 }
