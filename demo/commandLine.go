@@ -71,3 +71,11 @@ func (cli *CLI) NewWallet() {
 	//}
 
 }
+
+func (cli *CLI) ListAddresses() {
+	ws := NewWallets()
+	addresses := ws.ListAllAddresses()
+	for _, address := range addresses {
+		fmt.Println("地址：", address)
+	}
+}
