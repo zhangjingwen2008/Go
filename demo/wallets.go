@@ -54,7 +54,7 @@ func (ws *Wallets) loadFile() {
 	//读取之前，先确认文件是否存在，若不存在，直接退出
 	_, err := os.Stat(walletFile)
 	if os.IsNotExist(err) {
-		ws.WalletsMap = make(map[string]*Wallet)
+		ws.WalletsMap = make(map[string]*Wallet) 
 		return
 	}
 
