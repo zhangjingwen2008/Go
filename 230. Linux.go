@@ -88,7 +88,7 @@ package main
 	解压文件（tar）：tar -zxvf xxx.tar.gz
 	解压文件（tar）：tar -jxvf xxx.tar.bz2
 	- 压缩文件（zip）：zip -r 压缩包名(无.zip后缀)
-	- 解压文件（zip）：unzip -d 解压缩位置 xxx.zip(待解压缩文件)
+	- 解压文件（zip）： unzip-d 解压缩位置 xxx.zip(待解压缩文件)
 	压缩文件（rar）：rar a -r 压缩包名.rar(后缀可不加) 打包压缩材料
 	解压文件（rar）：rar x 待解压缩包名.rar
 
